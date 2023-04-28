@@ -7,7 +7,8 @@ public interface Event {
     /**
      * String die het type van het event beschrijft.
      * Bijoorbeeld "DeathEvent" voor een death event.
+     *
      * @return
      */
-    String getType();
+    EventType getType();
 }
