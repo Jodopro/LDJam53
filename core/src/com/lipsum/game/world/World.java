@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.function.BiFunction;
 
 public class World extends Actor {
-    public final int CHUNK_WIDTH_IN_TILES;
+    public final int CHUNK_DIMENSION_IN_TILES;
 
     private HashMap<Coordinate, Chunk> chunks;
     private final OrthographicCamera camera;
@@ -31,16 +31,16 @@ public class World extends Actor {
         this.camera.zoom = 10f;
         this.camera.update();
 
-        this.CHUNK_WIDTH_IN_TILES = chunkSideLengthInTiles;
+        this.CHUNK_DIMENSION_IN_TILES = chunkSideLengthInTiles;
         this.chunks = new HashMap<>();
         makeBackgroundChunk(0, 0);
     }
 
     private Chunk makeBackgroundChunk(int x, int y) {
         var coord = new Coordinate(x, y);
-        var newChunk = new Chunk(coord, new BackgroundTile[CHUNK_WIDTH_IN_TILES][CHUNK_WIDTH_IN_TILES]);
-        for (int rowI = 0; rowI < CHUNK_WIDTH_IN_TILES; rowI++) {
-            for (int colI = 0; colI < CHUNK_WIDTH_IN_TILES; colI++) {
+        var newChunk = new Chunk(coord, new BackgroundTile[CHUNK_DIMENSION_IN_TILES][CHUNK_DIMENSION_IN_TILES]);
+        for (int rowI = 0; rowI < CHUNK_DIMENSION_IN_TILES; rowI++) {
+            for (int colI = 0; colI < CHUNK_DIMENSION_IN_TILES; colI++) {
                 newChunk.tiles[rowI][colI] = new BackgroundTile(colI, rowI, newChunk);
             }
         }
@@ -50,7 +50,7 @@ public class World extends Actor {
     }
 
     public void step() {
-        var chunkSize = Tile.WIDTH * CHUNK_WIDTH_IN_TILES;
+        var chunkSize = Tile.WIDTH * CHUNK_DIMENSION_IN_TILES;
         currentChunkCoord = new Coordinate((int)Math.floor(camera.position.x / chunkSize), (int)Math.floor(camera.position.y / chunkSize));
 
         handleInput();
@@ -92,7 +92,7 @@ public class World extends Actor {
     }
 
     public Tile tileAt(float absoluteX, float absoluteY) {
-        var chunkSize = Tile.WIDTH * CHUNK_WIDTH_IN_TILES;
+        var chunkSize = Tile.WIDTH * CHUNK_DIMENSION_IN_TILES;
         BiFunction<Float, Float, Float> difference = (a, b) -> {
             var absA =  Math.abs(a);
             var absB = Math.abs(b);
@@ -111,7 +111,7 @@ public class World extends Actor {
     }
 
     public Twople<Float, Float> absolutePositionOf(Tile tile) {
-        var chunkSize = Tile.WIDTH * CHUNK_WIDTH_IN_TILES;
+        var chunkSize = Tile.WIDTH * CHUNK_DIMENSION_IN_TILES;
         float x = tile.chunk.coordinate.x() * chunkSize + tile.x * Tile.WIDTH;
         float y = tile.chunk.coordinate.y() * chunkSize + tile.y * Tile.HEIGHT;
         return new Twople<>(x, y);
