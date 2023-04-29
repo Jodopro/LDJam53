@@ -51,7 +51,6 @@ public class World extends Actor {
     public void step() {
         var chunkSize = Tile.WIDTH * CHUNK_SIZE;
         estimatedCoord = new Coordinate((int)Math.floor(camera.position.x / chunkSize), (int)Math.floor(camera.position.y / chunkSize));
-        System.out.printf("coordinate estimate: %d : %d%n", estimatedCoord.x(), estimatedCoord.y());
 
         handleInput();
         camera.update();
