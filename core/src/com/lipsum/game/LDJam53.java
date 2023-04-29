@@ -42,10 +42,13 @@ public class LDJam53 extends ApplicationAdapter {
 	@Override
 	public void create () {
 		var camera = new OrthographicCamera(30f, 30f);
-		world = new World(10, camera);
 		inputMultiplexer = new InputMultiplexer();
 
+		hudUI.create(inputMultiplexer);
+
 		stage = new Stage(new ScreenViewport(camera));
+		world = new World(10, stage);
+
 		stage.addActor(world);
 		stage.addActor(machineGroup);
 		stage.addActor(packetGroup);
@@ -57,7 +60,6 @@ public class LDJam53 extends ApplicationAdapter {
 		c1.addPacket(p);
 		inputMultiplexer.addProcessor(stage);
 
-		hudUI.create(inputMultiplexer);
 
 		Gdx.input.setInputProcessor(inputMultiplexer);
 

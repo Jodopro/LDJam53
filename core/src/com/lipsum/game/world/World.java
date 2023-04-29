@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.lipsum.game.world.tile.BackgroundTile;
 import com.lipsum.game.world.tile.Tile;
 
@@ -20,8 +21,12 @@ public class World extends Actor {
     private final OrthographicCamera camera;
     private final Texture cameraTexture = new Texture("camera.png");
 
-    public World(int chunkSize, OrthographicCamera camera) {
-        this.camera = camera;
+    private final TileClickListener tileClickListener;
+
+    public World(int chunkSize, Stage stage) {
+        super();
+        setStage(stage);
+        this.camera = (OrthographicCamera) stage.getCamera();
         this.camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0);
         this.camera.zoom = 10f;
         this.camera.update();
@@ -29,6 +34,9 @@ public class World extends Actor {
         this.CHUNK_SIZE = chunkSize;
         this.chunks = new HashMap<>();
         makeBackgroundChunk(0, 0);
+
+        tileClickListener = new TileClickListener(this);
+        stage.addListener(tileClickListener);
     }
 
     private Chunk makeBackgroundChunk(int x, int y) {
@@ -98,6 +106,7 @@ public class World extends Actor {
         for (var coord : chunks.keySet()) {
             chunks.get(coord).dispose();
         }
+        removeListener(tileClickListener);
     }
 
     private void handleInput() {
