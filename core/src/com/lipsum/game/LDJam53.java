@@ -2,6 +2,7 @@ package com.lipsum.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g3d.shaders.DefaultShader;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -10,7 +11,10 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.lipsum.game.actions.MoveConveyor;
 import com.lipsum.game.entities.Conveyor;
 import com.lipsum.game.entities.Packet;
+import com.lipsum.game.factory.factories.BuildingFactory;
+import com.lipsum.game.factory.factories.ConveyorFactory;
 import com.lipsum.game.factory.factories.EntityFactory;
+import com.lipsum.game.factory.factories.PacketFactory;
 
 public class LDJam53 extends ApplicationAdapter {
 	Stage stage;
@@ -18,6 +22,9 @@ public class LDJam53 extends ApplicationAdapter {
 		// Init all factories here, since static blocks are only executed when the class is used.
 		// Missing factories here will potentially make them invisible to super-factories
 		EntityFactory.getInstance();
+		BuildingFactory.getInstance();
+		ConveyorFactory.getInstance();
+		PacketFactory.getInstance();
 	}
 	
 	@Override
