@@ -60,8 +60,6 @@ public class Conveyor extends Building {
         this.outputs = outputs;
     }
 
-    private ShapeRenderer renderer = new ShapeRenderer();
-
     public void setPacketLocation(float progress){
         float x = getX() + Tile.WIDTH/10;
         float y = getY() + Tile.HEIGHT/10;
@@ -139,24 +137,6 @@ public class Conveyor extends Building {
         }
     }
 
-    public void draw (Batch batch, float parentAlpha) {
-        batch.end();
-
-        renderer.setProjectionMatrix(batch.getProjectionMatrix());
-        renderer.setTransformMatrix(batch.getTransformMatrix());
-        renderer.translate(getX(), getY(), 0);
-
-        renderer.begin(ShapeRenderer.ShapeType.Filled);
-        renderer.setColor(getColor());
-        renderer.rect(0, 0, getWidth(), getHeight());
-        renderer.end();
-
-        batch.begin();
-    }
-
-    public boolean hasPacket(){
-        return packet != null;
-    }
 
     public List<Building> allowsInputFrom(){
         List<Building> l = new ArrayList<>();
