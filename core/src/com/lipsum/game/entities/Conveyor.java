@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.lipsum.game.actions.MoveConveyor;
 import com.lipsum.game.factory.AbstractFactory;
 import com.lipsum.game.factory.factories.ConveyorFactory;
+import com.lipsum.game.world.tile.Tile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,27 +63,27 @@ public class Conveyor extends Building {
     private ShapeRenderer renderer = new ShapeRenderer();
 
     public void setPacketLocation(float progress){
-        float x = getX() + 5;
-        float y = getY() + 5;
+        float x = getX() + Tile.WIDTH/10;
+        float y = getY() + Tile.HEIGHT/10;
         if (progress < 0.5f){
             switch (currentFrom){
-                case SOUTH -> y += 50*progress - 25;
-                case WEST -> x += 50*progress - 25;
-                case EAST -> x += 50*(1-progress) - 25;
-                case NORTH -> y += 50*(1-progress) - 25;
+                case SOUTH -> y += Tile.HEIGHT*progress - Tile.HEIGHT/2;
+                case WEST -> x += Tile.WIDTH*progress - Tile.WIDTH/2;
+                case EAST -> x += Tile.WIDTH*(1-progress) - Tile.WIDTH/2;
+                case NORTH -> y += Tile.HEIGHT*(1-progress) - Tile.HEIGHT/2;
             }
         } else {
             switch (currentTo){
-                case WEST -> x += 50*(1-progress) - 25;
-                case SOUTH -> y += 50*(1-progress) - 25;
-                case NORTH -> y += 50*progress - 25;
-                case EAST -> x += 50*progress - 25;
+                case WEST -> x += Tile.WIDTH*(1-progress) - Tile.WIDTH/2;
+                case SOUTH -> y += Tile.HEIGHT*(1-progress) - Tile.HEIGHT/2;
+                case NORTH -> y += Tile.HEIGHT*progress - Tile.HEIGHT/2;
+                case EAST -> x += Tile.WIDTH*progress - Tile.WIDTH/2;
             }
         }
         if (packet == null){
             throw new IllegalStateException("Conveyor has not packet");
         } else {
-            packet.setBounds(x, y, 40, 40);
+            packet.setBounds(x, y, Tile.WIDTH*8/10, Tile.HEIGHT*8/10);
         }
     }
 

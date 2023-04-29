@@ -3,7 +3,7 @@ package com.lipsum.game.entities;
 import com.lipsum.game.LDJam53;
 import com.lipsum.game.event.EventQueue;
 import com.lipsum.game.factory.factories.BuildingFactory;
-
+import com.lipsum.game.world.tile.Tile;
 import static java.lang.Math.abs;
 
 public class Building extends Entity{
@@ -16,7 +16,7 @@ public class Building extends Entity{
     public Building(int x, int y){
         this.gridX = x;
         this.gridY = y;
-        setBounds(x*50, y*50, 50, 50);
+        setBounds(x*Tile.WIDTH, y*Tile.WIDTH, Tile.WIDTH, Tile.WIDTH);
 
         BuildingFactory.getInstance().getAllManagedObjects().forEach(
                b -> {
