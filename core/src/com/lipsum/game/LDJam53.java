@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Random;
 
 public class LDJam53 extends ApplicationAdapter {
+	public static float stateTime = 0f;
 	World world;
 	InputMultiplexer inputMultiplexer;
 	HudUI hudUI = new HudUI();
@@ -99,6 +100,7 @@ public class LDJam53 extends ApplicationAdapter {
 
 		ScreenUtils.clear(0, 0, 0, 1);
 		float delta = Gdx.graphics.getDeltaTime();
+		stateTime += delta;
 		stage.act(delta);
 		stage.draw();
 
