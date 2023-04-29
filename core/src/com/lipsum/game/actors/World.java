@@ -8,7 +8,7 @@ public class World extends Layer{
         MyActor myActor2 = new MyActor(20, 50, 2, "right");
         this.addActor(myActor2);
         this.addActor(myActor);
-        MoveToAction move = new MoveToAction(myActor2, 100, 100, 10);
+        MoveToAction move = new MoveToAction(myActor2, 100, 100, 100);
         myActor2.addAction(move);
     }
 }
