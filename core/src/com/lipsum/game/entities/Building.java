@@ -9,10 +9,10 @@ import static java.lang.Math.abs;
 public class Building extends Entity{
     protected int gridX;
     protected int gridY;
-    protected Building northBuilding;
-    protected Building southBuilding;
-    protected Building eastBuilding;
-    protected Building westBuilding;
+    protected Building northBuilding = null;
+    protected Building southBuilding = null;
+    protected Building eastBuilding = null;
+    protected Building westBuilding = null;
     public Building(int x, int y){
         this.gridX = x;
         this.gridY = y;
@@ -24,21 +24,25 @@ public class Building extends Entity{
                         if (b.gridY == y+1) {
                             b.southBuilding=this;
                             northBuilding = b;
+                            System.out.println(b.gridX + "," + b.gridY +"s"+ x + "," + y);
                         } else if (b.gridY == y-1){
                             b.northBuilding=this;
                             southBuilding = b;
+                            System.out.println(b.gridX + "," + b.gridY +"n"+ x + "," + y);
                         } else if (b.gridY == y && b != this){
                             throw new IllegalStateException("Building already occupies this spot");
                         }
-                    } else if (gridY == this.gridY) {
-                       if (b.gridX == x+1) {
-                           b.westBuilding=this;
-                           eastBuilding = b;
-                       } else if (b.gridX == x-1){
-                           b.eastBuilding=this;
-                           westBuilding = b;
-                       }
-                    }
+                   } else if (y == b.gridY) {
+                      if (b.gridX == x+1) {
+                          b.westBuilding=this;
+                          eastBuilding = b;
+                          System.out.println(b.gridX + "," + b.gridY +"w"+ x + "," + y);
+                      } else if (b.gridX == x-1){
+                          b.eastBuilding=this;
+                          westBuilding = b;
+                          System.out.println(b.gridX + "," + b.gridY +"e"+ x + "," + y);
+                      }
+                   }
                }
         );
         LDJam53.machineGroup.addActor(this);
