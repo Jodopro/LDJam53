@@ -15,6 +15,4 @@ public class HudUI extends BaseUI {
         table.add(new BuildMenu());
         stage.addActor(table);
     }
-
-
 }

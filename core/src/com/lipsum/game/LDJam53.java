@@ -5,6 +5,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.lipsum.game.event.EventQueue;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -15,9 +20,10 @@ import com.lipsum.game.factory.factories.ConveyorFactory;
 import com.lipsum.game.factory.factories.EntityFactory;
 import com.lipsum.game.ui.hud.HudUI;
 import com.lipsum.game.factory.factories.PacketFactory;
+import com.lipsum.game.world.World;
 
 public class LDJam53 extends ApplicationAdapter {
-
+	World world;
 	InputMultiplexer inputMultiplexer;
 	HudUI hudUI = new HudUI();
 
@@ -35,9 +41,12 @@ public class LDJam53 extends ApplicationAdapter {
 	
 	@Override
 	public void create () {
+		var camera = new OrthographicCamera(30f, 30f);
+		world = new World(10, camera);
 		inputMultiplexer = new InputMultiplexer();
 
-		stage = new Stage(new ScreenViewport());
+		stage = new Stage(new ScreenViewport(camera));
+		stage.addActor(world);
 		stage.addActor(machineGroup);
 		stage.addActor(packetGroup);
 
@@ -66,9 +75,9 @@ public class LDJam53 extends ApplicationAdapter {
 	@Override
 	public void render () {
 		EventQueue.getInstance().handleAll();
+		world.step();
 
 		ScreenUtils.clear(0, 0, 0, 1);
-
 		float delta = Gdx.graphics.getDeltaTime();
 		stage.act(delta);
 		stage.draw();
@@ -77,6 +86,7 @@ public class LDJam53 extends ApplicationAdapter {
 	}
 	@Override
 	public void dispose () {
+		world.dispose();
 		stage.dispose();
 		hudUI.dispose();
 	}
