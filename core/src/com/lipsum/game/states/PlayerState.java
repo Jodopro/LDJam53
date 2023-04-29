@@ -21,9 +21,9 @@ public class PlayerState {
             new single(100f)
         );
     }
-    private PlayerState instance;
+    private static PlayerState instance;
 
-    public PlayerState getInstance() {
+    public static PlayerState getInstance() {
         if (instance == null) {
             instance = new PlayerState();
         }
