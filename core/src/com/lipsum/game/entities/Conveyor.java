@@ -69,7 +69,6 @@ public class Conveyor extends Building {
                 case SOUTH -> y += 50*progress - 25;
                 case WEST -> x += 50*progress - 25;
                 case EAST -> x += 50*(1-progress) - 25;
-//                case EAST -> x += 50*(1-progress) + 15;
                 case NORTH -> y += 50*(1-progress) - 25;
             }
         } else {

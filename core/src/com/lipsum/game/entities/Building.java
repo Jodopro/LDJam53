@@ -9,10 +9,10 @@ import static java.lang.Math.abs;
 public class Building extends Entity{
     protected int gridX;
     protected int gridY;
-    protected Building northBuilding = null;
-    protected Building southBuilding = null;
-    protected Building eastBuilding = null;
-    protected Building westBuilding = null;
+    protected Building northBuilding;
+    protected Building southBuilding;
+    protected Building eastBuilding;
+    protected Building westBuilding;
     public Building(int x, int y){
         this.gridX = x;
         this.gridY = y;

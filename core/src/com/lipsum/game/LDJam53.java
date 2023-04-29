@@ -40,9 +40,7 @@ public class LDJam53 extends ApplicationAdapter {
 
 		Conveyor c1 = new Conveyor(2, 1, Conveyor.Direction.NORTH);
 		new Conveyor(2, 2, Conveyor.Direction.NORTH);
-//		new Conveyor(2, 3, List.of(Conveyor.Direction.SOUTH), List.of(Conveyor.Direction.WEST, Conveyor.Direction.EAST));
-//		new Conveyor(2, 3, List.of(Conveyor.Direction.SOUTH), List.of(Conveyor.Direction.EAST));
-		new Conveyor(2, 3, List.of(Conveyor.Direction.SOUTH), List.of(Conveyor.Direction.WEST));
+		new Conveyor(2, 3, List.of(Conveyor.Direction.SOUTH), List.of(Conveyor.Direction.WEST, Conveyor.Direction.EAST));
 		new Conveyor(1, 3, Conveyor.Direction.WEST);
 		new Conveyor(3, 3, Conveyor.Direction.EAST);
 		new Conveyor(4, 3, List.of(Conveyor.Direction.WEST), List.of(Conveyor.Direction.NORTH));
