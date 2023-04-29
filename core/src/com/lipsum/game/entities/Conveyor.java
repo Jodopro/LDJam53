@@ -2,32 +2,24 @@ package com.lipsum.game.entities;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.lipsum.game.actions.MoveConveyor;
+import com.lipsum.game.factory.AbstractFactory;
 import com.lipsum.game.factory.factories.ConveyorFactory;
 
 
 public class Conveyor extends Building {
-    private Packet packet;
+    public static AbstractFactory factory = ConveyorFactory.getInstance();
     private String direction;
+    private Building next;
 
     //TODO: direction should be enum
     public Conveyor(int x, int y, String direction){
-        super();
-        setBounds(x, y, 50, 50);
+        super(x, y);
         setColor(0,1,0,1);
         this.direction = direction;
-
-        ConveyorFactory.getInstance().addManagedObject(this);
     }
 
     private ShapeRenderer renderer = new ShapeRenderer();
-
-    public void addPacket(Packet p){
-        if (p == null){
-            throw new IllegalStateException("Conveyor already had a packet");
-        } else {
-            this.packet = p;
-        }
-    }
 
     public void setPacketLocation(float progress){
         float x = getX();
@@ -53,6 +45,39 @@ public class Conveyor extends Building {
             packet.setBounds(x, y, 40, 40);
         }
     }
+
+    public void passToNext(){
+        Building b = null;
+        if (direction == "north" && northBuilding != null){
+            b=northBuilding;
+        } else if (direction == "south" && southBuilding != null){
+            b=southBuilding;
+        } else if (direction == "east" && eastBuilding != null){
+            b=eastBuilding;
+        } else if (direction == "west" && westBuilding != null){
+            b=westBuilding;
+        }
+        //TODO: check if this building is allowed this input direction
+        if (b != null && !b.hasPacket()){
+            b.addPacket(packet);
+            packet = null;
+        } else {
+            //TODO: add listener for updates
+        }
+
+    }
+
+    @Override
+    public void addPacket(Packet p){
+        if (p == null){
+            throw new IllegalStateException("Conveyor already had a packet");
+        } else {
+            this.packet = p;
+            MoveConveyor moveConveyor = new MoveConveyor(this, 0.5f);
+            this.addAction(moveConveyor);
+        }
+    }
+
     public void draw (Batch batch, float parentAlpha) {
         batch.end();
 

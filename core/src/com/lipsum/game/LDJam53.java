@@ -18,6 +18,8 @@ import com.lipsum.game.factory.factories.PacketFactory;
 
 public class LDJam53 extends ApplicationAdapter {
 	Stage stage;
+	public static Group packetGroup = new Group();
+	public static Group machineGroup = new Group();
 	static {
 		// Init all factories here, since static blocks are only executed when the class is used.
 		// Missing factories here will potentially make them invisible to super-factories
@@ -30,17 +32,14 @@ public class LDJam53 extends ApplicationAdapter {
 	@Override
 	public void create () {
 		stage = new Stage(new ScreenViewport());
-		Group packetGroup = new Group();
-		Group machineGroup = new Group();
 		stage.addActor(machineGroup);
 		stage.addActor(packetGroup);
 
-		Conveyor c = new Conveyor(10, 10, "north");
-		machineGroup.addActor(c);
+		Conveyor c1 = new Conveyor(1, 1, "north");
+		Conveyor c2 = new Conveyor(1, 2, "north");
+		Conveyor c3 = new Conveyor(1, 3, "east");
 		Packet p = new Packet();
-		c.addPacket(p);
-		packetGroup.addActor(p);
-		c.addAction(new MoveConveyor(c, 0.5f));
+		c1.addPacket(p);
 		Gdx.input.setInputProcessor(stage);
 	}
 
