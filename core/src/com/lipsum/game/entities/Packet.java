@@ -32,6 +32,6 @@ public class Packet extends Entity {
 
     @Override
     public void onDispose() {
-        //TODO: do onDispose()
+        remove();
     }
 }

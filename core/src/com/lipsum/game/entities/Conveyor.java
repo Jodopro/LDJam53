@@ -113,10 +113,6 @@ public class Conveyor extends Building {
         } else {
             //TODO: add listener for updates
         }
-//        if (packet == null){
-//            getNextPacket();
-//        }
-
     }
 
     public void addPacket(Packet p, Conveyor from, Direction d){
@@ -135,7 +131,7 @@ public class Conveyor extends Building {
                 currentFrom = next.direction;
                 Random rand = new Random();
                 currentTo = outputs.get(rand.nextInt(outputs.size()));
-                MoveConveyor moveConveyor = new MoveConveyor(this, 1);
+                MoveConveyor moveConveyor = new MoveConveyor(this, 2);
                 this.addAction(moveConveyor);
                 next.previousConveyor.packet = null;
                 next.previousConveyor.getNextPacket();

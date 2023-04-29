@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.lipsum.game.entities.Consumer;
 import com.lipsum.game.entities.Producer;
 import com.lipsum.game.event.EventQueue;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -65,13 +66,8 @@ public class LDJam53 extends ApplicationAdapter {
 		new Conveyor(4, 4, Conveyor.Direction.NORTH);
 		new Conveyor(0, 4, Conveyor.Direction.NORTH);
 		new Producer(2, 0, Conveyor.Direction.NORTH);
-
-		Packet p = new Packet();
-		c1.setPacket(p);
-		c1.setCurrentFrom(Conveyor.Direction.SOUTH);
-		c1.setCurrentTo(Conveyor.Direction.NORTH);
-		MoveConveyor moveConveyor = new MoveConveyor(c1, 1);
-		c1.addAction(moveConveyor);
+		new Consumer(0,5,Conveyor.Direction.NORTH);
+		new Consumer(4,5,Conveyor.Direction.NORTH);
 
 		inputMultiplexer.addProcessor(stage);
 
