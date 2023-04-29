@@ -16,18 +16,19 @@ public class SubtitledImageDrawable implements Drawable {
     private final String text;
     private final BitmapFont font;
     private final Color overlay;
+    private final ShapeRenderer shapeRenderer;
 
     public SubtitledImageDrawable(Texture texture, String text, BitmapFont font, @Null Color overlay) {
         this.texture = texture;
         this.text = text;
         this.font = font;
         this.overlay = overlay;
+        shapeRenderer = new ShapeRenderer();
     }
 
     @Override
     public void draw(Batch batch, float x, float y, float width, float height) {
         float textureScale = width / texture.getWidth();
-        ShapeRenderer shapeRenderer = new ShapeRenderer();
         shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
         batch.end();
 
