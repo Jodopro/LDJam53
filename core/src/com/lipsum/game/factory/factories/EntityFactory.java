@@ -1,6 +1,6 @@
 package com.lipsum.game.factory.factories;
 
-import com.lipsum.game.entity.Entity;
+import com.lipsum.game.entities.Entity;
 import com.lipsum.game.factory.AbstractFactory;
 import com.lipsum.game.factory.EntityDeathManager;
 
