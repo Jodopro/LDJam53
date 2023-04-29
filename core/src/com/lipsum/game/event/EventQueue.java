@@ -9,9 +9,9 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public class EventQueue {
     private final ConcurrentLinkedQueue<Event> eventQueue;
-    private final HashMap<EventConsumer<? extends Event>, String> toRegisterConsumersByType;
-    private final HashMap<EventConsumer<? extends Event>, String> toDeregisterConsumersByType;
-    private final HashMap<String, ArrayList<EventConsumer<? extends Event>>> eventConsumersByType;
+    private final HashMap<EventConsumer<? extends Event>, EventType> toRegisterConsumersByType;
+    private final HashMap<EventConsumer<? extends Event>, EventType> toDeregisterConsumersByType;
+    private final HashMap<EventType, ArrayList<EventConsumer<? extends Event>>> eventConsumersByType;
     private static EventQueue instance;
 
     private boolean handling;
@@ -85,7 +85,7 @@ public class EventQueue {
         toDeregisterConsumersByType.clear();
     }
 
-    public void registerConsumer(EventConsumer<? extends Event> consumer, String eventType) {
+    public void registerConsumer(EventConsumer<? extends Event> consumer, EventType eventType) {
         if (!handling) {
             if (this.eventConsumersByType.containsKey(eventType)) {
                 ArrayList<EventConsumer<? extends Event>> currentConsumer = this.eventConsumersByType.get(eventType);
@@ -104,9 +104,9 @@ public class EventQueue {
     /**
      * Verwijder de eventConsumer (ref naar de instance die opgeslagen staat) van de event consumers.
      * @param eventConsumer De consumer (wooh documentatie).
-     * @param eventType moet corresponderen aan een {@link Event}.getType() - type van het event
+     * @param eventType moet corresponderen aan een {@link EventType} - type van het event
      */
-    public void deregisterConsumer(EventConsumer<? extends Event> eventConsumer, String eventType) {
+    public void deregisterConsumer(EventConsumer<? extends Event> eventConsumer, EventType eventType) {
         if (!handling) {
             ArrayList<EventConsumer<? extends Event>> consumers = this.eventConsumersByType.get(eventType);
             if (consumers.contains(eventConsumer)) {

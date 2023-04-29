@@ -9,5 +9,5 @@ public interface Event {
      * Bijoorbeeld "DeathEvent" voor een death event.
      * @return
      */
-    String getType();
+    EventType getType();
 }
