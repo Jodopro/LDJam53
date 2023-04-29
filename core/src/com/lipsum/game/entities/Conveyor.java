@@ -31,10 +31,10 @@ public class Conveyor extends Building {
             this.previousConveyor = c;
         }
     }
-    private List<Direction> inputs;
-    private List<Direction> outputs;
-    private Direction currentFrom;
-    private Direction currentTo;
+    protected List<Direction> inputs;
+    protected List<Direction> outputs;
+    protected Direction currentFrom;
+    protected Direction currentTo;
     protected Packet packet;
     private Queue<Waiting> waitingQueue = new ConcurrentLinkedQueue();
 
@@ -102,7 +102,6 @@ public class Conveyor extends Building {
             b=westBuilding;
             d=Direction.EAST;
         }
-        System.out.println(d);
         if (b != null && b instanceof Conveyor) {
             Conveyor c = (Conveyor) b;
             if (c.allowsInputFrom().contains(this)) {
@@ -113,32 +112,33 @@ public class Conveyor extends Building {
         } else {
             //TODO: add listener for updates
         }
-        if (packet == null){
-            getNextPacket();
-        }
+//        if (packet == null){
+//            getNextPacket();
+//        }
 
     }
 
     public void addPacket(Packet p, Conveyor from, Direction d){
-        if (p == null){
-            throw new IllegalStateException("Conveyor already had a packet");
-        } else {
-            Waiting w = new Waiting(d, p, from);
-            waitingQueue.add(w);
+        Waiting w = new Waiting(d, p, from);
+        waitingQueue.add(w);
+        if (packet == null){
             getNextPacket();
         }
     }
 
-    private void getNextPacket(){
-        Waiting next = waitingQueue.poll();
-        if (next != null){
-            packet = next.packet;
-            currentFrom = next.direction;
-            Random rand = new Random();
-            currentTo = outputs.get(rand.nextInt(outputs.size()));
-            MoveConveyor moveConveyor = new MoveConveyor(this, 1);
-            this.addAction(moveConveyor);
-            next.previousConveyor.packet = null;
+    protected void getNextPacket(){
+        if (packet == null){
+            Waiting next = waitingQueue.poll();
+            if (next != null){
+                packet = next.packet;
+                currentFrom = next.direction;
+                Random rand = new Random();
+                currentTo = outputs.get(rand.nextInt(outputs.size()));
+                MoveConveyor moveConveyor = new MoveConveyor(this, 1);
+                this.addAction(moveConveyor);
+                next.previousConveyor.packet = null;
+                next.previousConveyor.getNextPacket();
+            }
         }
     }
 

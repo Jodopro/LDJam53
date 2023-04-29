@@ -24,11 +24,9 @@ public class Building extends Entity{
                         if (b.gridY == y+1) {
                             b.southBuilding=this;
                             northBuilding = b;
-                            System.out.println(b.gridX + "," + b.gridY +"s"+ x + "," + y);
                         } else if (b.gridY == y-1){
                             b.northBuilding=this;
                             southBuilding = b;
-                            System.out.println(b.gridX + "," + b.gridY +"n"+ x + "," + y);
                         } else if (b.gridY == y && b != this){
                             throw new IllegalStateException("Building already occupies this spot");
                         }
@@ -36,11 +34,9 @@ public class Building extends Entity{
                       if (b.gridX == x+1) {
                           b.westBuilding=this;
                           eastBuilding = b;
-                          System.out.println(b.gridX + "," + b.gridY +"w"+ x + "," + y);
                       } else if (b.gridX == x-1){
                           b.eastBuilding=this;
                           westBuilding = b;
-                          System.out.println(b.gridX + "," + b.gridY +"e"+ x + "," + y);
                       }
                    }
                }
