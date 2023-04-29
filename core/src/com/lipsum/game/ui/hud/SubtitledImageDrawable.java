@@ -52,8 +52,8 @@ public class SubtitledImageDrawable implements Drawable {
 
 
         batch.begin();
-        batch.draw(texture, x, y + font.getLineHeight(), textureScale * texture.getWidth(), textureScale * texture.getHeight());
-        font.draw(batch, text, x, y + font.getLineHeight(), width, Align.center, false);
+        batch.draw(texture, x, y + font.getLineHeight() * 2, textureScale * texture.getWidth(), textureScale * texture.getHeight());
+        font.draw(batch, text, x, y + font.getLineHeight() * 2, width, Align.center, false);
 
         if (state != ButtonState.DEFAULT) {
             batch.end();
