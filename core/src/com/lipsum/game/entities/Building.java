@@ -13,7 +13,6 @@ public class Building extends Entity{
     protected Building southBuilding;
     protected Building eastBuilding;
     protected Building westBuilding;
-    protected Packet packet;
     public Building(int x, int y){
         this.gridX = x;
         this.gridY = y;
@@ -28,6 +27,8 @@ public class Building extends Entity{
                         } else if (b.gridY == y-1){
                             b.northBuilding=this;
                             southBuilding = b;
+                        } else if (b.gridY == y && b != this){
+                            throw new IllegalStateException("Building already occupies this spot");
                         }
                     } else if (gridY == this.gridY) {
                        if (b.gridX == x+1) {
@@ -45,17 +46,5 @@ public class Building extends Entity{
     @Override
     public void onDispose() {
         //TODO: do onDispose() in Building
-    }
-
-    public void addPacket(Packet p){
-        if (p == null){
-            throw new IllegalStateException("Building already had a packet");
-        } else {
-            this.packet = p;
-        }
-    }
-
-    public boolean hasPacket(){
-        return packet != null;
     }
 }

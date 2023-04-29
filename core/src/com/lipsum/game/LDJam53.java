@@ -35,9 +35,9 @@ public class LDJam53 extends ApplicationAdapter {
 		stage.addActor(machineGroup);
 		stage.addActor(packetGroup);
 
-		Conveyor c1 = new Conveyor(1, 1, "north");
-		Conveyor c2 = new Conveyor(1, 2, "north");
-		Conveyor c3 = new Conveyor(1, 3, "east");
+		Conveyor c1 = new Conveyor(1, 1, Conveyor.Direction.NORTH);
+		Conveyor c2 = new Conveyor(1, 2, Conveyor.Direction.NORTH);
+		Conveyor c3 = new Conveyor(1, 3, Conveyor.Direction.EAST);
 		Packet p = new Packet();
 		c1.addPacket(p);
 		Gdx.input.setInputProcessor(stage);
