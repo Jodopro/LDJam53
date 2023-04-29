@@ -24,6 +24,9 @@ public class PlayerState {
     private PlayerState instance;
 
     public PlayerState getInstance() {
+        if (instance == null) {
+            instance = new PlayerState();
+        }
         return instance;
     }
 
