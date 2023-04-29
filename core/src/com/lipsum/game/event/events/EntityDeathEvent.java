@@ -1,6 +1,6 @@
 package com.lipsum.game.event.events;
 
-import com.lipsum.game.entity.Entity;
+import com.lipsum.game.entities.Entity;
 import com.lipsum.game.event.Event;
 import com.lipsum.game.event.EventType;
 
