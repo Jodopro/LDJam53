@@ -1,8 +1,8 @@
 package com.lipsum.game.factory.factories;
 
-import com.lipsum.game.entity.Entity;
+import com.lipsum.game.entities.Entity;
 import com.lipsum.game.factory.AbstractFactory;
-import com.lipsum.game.factory.EntityDeathManager;
+import com.lipsum.game.managers.EntityDeathManager;
 
 public class EntityFactory extends AbstractFactory<Entity> {
     private static EntityFactory instance = null;

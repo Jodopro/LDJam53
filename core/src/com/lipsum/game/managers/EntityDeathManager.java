@@ -1,4 +1,4 @@
-package com.lipsum.game.factory;
+package com.lipsum.game.managers;
 
 import com.lipsum.game.event.EventConsumer;
 import com.lipsum.game.event.EventQueue;
