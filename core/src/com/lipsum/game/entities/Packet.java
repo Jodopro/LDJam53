@@ -1,14 +1,17 @@
-package com.lipsum.game.actors;
+package com.lipsum.game.entities;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.lipsum.game.factory.factories.ConveyorFactory;
+import com.lipsum.game.factory.factories.PacketFactory;
 
-public class Packet extends Actor {
+public class Packet extends Entity {
 
     public Packet(){
         super();
         setColor(0,0,1,1);
+
+        PacketFactory.getInstance().addManagedObject(this);
     }
 
     private ShapeRenderer renderer = new ShapeRenderer();
@@ -25,5 +28,10 @@ public class Packet extends Actor {
         renderer.end();
 
         batch.begin();
+    }
+
+    @Override
+    public void onDispose() {
+        //TODO: do onDispose()
     }
 }

@@ -1,7 +1,7 @@
 package com.lipsum.game.actions;
 
 import com.badlogic.gdx.scenes.scene2d.Action;
-import com.lipsum.game.actors.Conveyor;
+import com.lipsum.game.entities.Conveyor;
 
 public class MoveConveyor extends Action {
     private float progress = 0;

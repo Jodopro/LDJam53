@@ -1,11 +1,11 @@
-package com.lipsum.game.actors;
+package com.lipsum.game.entities;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.lipsum.game.factory.factories.ConveyorFactory;
 
 
-public class Conveyor extends Actor {
+public class Conveyor extends Building {
     private Packet packet;
     private String direction;
 
@@ -15,6 +15,8 @@ public class Conveyor extends Actor {
         setBounds(x, y, 50, 50);
         setColor(0,1,0,1);
         this.direction = direction;
+
+        ConveyorFactory.getInstance().addManagedObject(this);
     }
 
     private ShapeRenderer renderer = new ShapeRenderer();

@@ -2,22 +2,18 @@ package com.lipsum.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.lipsum.game.event.EventQueue;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.lipsum.game.actions.MoveConveyor;
-import com.lipsum.game.actors.Conveyor;
-import com.lipsum.game.actors.Packet;
-import com.lipsum.game.event.EventQueue;
+import com.lipsum.game.entities.Conveyor;
+import com.lipsum.game.entities.Packet;
 import com.lipsum.game.factory.factories.EntityFactory;
 
 public class LDJam53 extends ApplicationAdapter {
-	SpriteBatch batch;
-	Texture img;
+	Stage stage;
 	static {
 		// Init all factories here, since static blocks are only executed when the class is used.
 		// Missing factories here will potentially make them invisible to super-factories
