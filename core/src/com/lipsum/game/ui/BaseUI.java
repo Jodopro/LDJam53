@@ -1,6 +1,7 @@
 package com.lipsum.game.ui;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -21,7 +22,7 @@ public class BaseUI {
 
     }
 
-    public void create () {
+    public void create (InputMultiplexer inputMultiplexer) {
         viewport = new ScreenViewport();
         camera = viewport.getCamera();
         stage = new Stage(viewport);
@@ -30,9 +31,7 @@ public class BaseUI {
         table.setFillParent(true);
         stage.addActor(table);
 
-        // Set as input device
-        Gdx.input.setInputProcessor(stage);
-
+        inputMultiplexer.addProcessor(stage);
     }
 
     public void resize (int width, int height) {
@@ -49,4 +48,7 @@ public class BaseUI {
         stage.dispose();
     }
 
+    public Stage getStage() {
+        return stage;
+    }
 }

@@ -2,13 +2,12 @@ package com.lipsum.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g3d.shaders.DefaultShader;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.lipsum.game.event.EventQueue;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.lipsum.game.actions.MoveConveyor;
 import com.lipsum.game.entities.Conveyor;
 import com.lipsum.game.entities.Packet;
 import com.lipsum.game.factory.factories.BuildingFactory;
@@ -18,6 +17,8 @@ import com.lipsum.game.ui.hud.HudUI;
 import com.lipsum.game.factory.factories.PacketFactory;
 
 public class LDJam53 extends ApplicationAdapter {
+
+	InputMultiplexer inputMultiplexer;
 	HudUI hudUI = new HudUI();
 
 	Stage stage;
@@ -34,6 +35,8 @@ public class LDJam53 extends ApplicationAdapter {
 	
 	@Override
 	public void create () {
+		inputMultiplexer = new InputMultiplexer();
+
 		stage = new Stage(new ScreenViewport());
 		stage.addActor(machineGroup);
 		stage.addActor(packetGroup);
@@ -43,9 +46,12 @@ public class LDJam53 extends ApplicationAdapter {
 		Conveyor c3 = new Conveyor(1, 3, Conveyor.Direction.EAST);
 		Packet p = new Packet();
 		c1.addPacket(p);
-		Gdx.input.setInputProcessor(stage);
+		inputMultiplexer.addProcessor(stage);
 
-		hudUI.create();
+		hudUI.create(inputMultiplexer);
+
+		Gdx.input.setInputProcessor(inputMultiplexer);
+
 	}
 
 	@Override
