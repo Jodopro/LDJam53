@@ -85,7 +85,7 @@ public class Conveyor extends Building {
         }
     }
 
-    public void passToNext(){
+    public boolean passToNext(){
         Building b = null;
         Direction d = null;
         if (currentTo == Direction.NORTH && northBuilding != null){
@@ -105,12 +105,10 @@ public class Conveyor extends Building {
             Conveyor c = (Conveyor) b;
             if (c.allowsInputFrom().contains(this)) {
                 c.addPacket(packet, this, d);
-            } else {
-                //TODO: add listener for updates
+                return true;
             }
-        } else {
-            //TODO: add listener for updates
         }
+        return false;
     }
 
     public void addPacket(Packet p, Conveyor from, Direction d){

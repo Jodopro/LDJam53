@@ -48,7 +48,7 @@ public class LDJam53 extends ApplicationAdapter {
 	@Override
 	public void create () {
 		var camera = new OrthographicCamera(30f, 30f);
-		world = new World(10, camera);
+		world = World.init(10, camera);
 		inputMultiplexer = new InputMultiplexer();
 
 		stage = new Stage(new ScreenViewport(camera));
@@ -56,18 +56,18 @@ public class LDJam53 extends ApplicationAdapter {
 		stage.addActor(machineGroup);
 		stage.addActor(packetGroup);
 
-		Conveyor c1 = new Conveyor(2, 1, Conveyor.Direction.NORTH);
-		new Conveyor(2, 2, Conveyor.Direction.NORTH);
-		new Conveyor(2, 3, List.of(Conveyor.Direction.SOUTH), List.of(Conveyor.Direction.WEST, Conveyor.Direction.EAST));
-		new Conveyor(1, 3, Conveyor.Direction.WEST);
-		new Conveyor(3, 3, Conveyor.Direction.EAST);
-		new Conveyor(4, 3, List.of(Conveyor.Direction.WEST), List.of(Conveyor.Direction.NORTH));
-		new Conveyor(0, 3, List.of(Conveyor.Direction.EAST), List.of(Conveyor.Direction.NORTH));
-		new Conveyor(4, 4, Conveyor.Direction.NORTH);
-		new Conveyor(0, 4, Conveyor.Direction.NORTH);
-		new Producer(2, 0, Conveyor.Direction.NORTH);
-		new Consumer(0,5,Conveyor.Direction.NORTH);
-		new Consumer(4,5,Conveyor.Direction.NORTH);
+		Conveyor c1 = new Conveyor(3, 2, Conveyor.Direction.NORTH);
+		new Conveyor(3, 3, Conveyor.Direction.NORTH);
+		new Conveyor(3, 4, List.of(Conveyor.Direction.SOUTH), List.of(Conveyor.Direction.WEST, Conveyor.Direction.EAST));
+		new Conveyor(2, 4, Conveyor.Direction.WEST);
+		new Conveyor(4, 4, Conveyor.Direction.EAST);
+		new Conveyor(5, 4, List.of(Conveyor.Direction.WEST), List.of(Conveyor.Direction.NORTH));
+		new Conveyor(1, 4, List.of(Conveyor.Direction.EAST), List.of(Conveyor.Direction.NORTH));
+		new Conveyor(5, 5, Conveyor.Direction.NORTH);
+		new Conveyor(1, 5, Conveyor.Direction.NORTH);
+		new Producer(3, 1, Conveyor.Direction.NORTH);
+		new Consumer(1,6,Conveyor.Direction.NORTH);
+		new Consumer(5,6,Conveyor.Direction.NORTH);
 
 		inputMultiplexer.addProcessor(stage);
 

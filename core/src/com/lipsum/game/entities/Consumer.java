@@ -18,8 +18,9 @@ public class Consumer extends Conveyor {
     }
 
     @Override
-    public void passToNext(){
+    public boolean passToNext(){
         EntityFactory.getInstance().removeManagedObject(packet);
         packet = null;
+        return true;
     }
 }

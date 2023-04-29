@@ -20,8 +20,7 @@ public class MoveConveyor extends Action {
         }
         conveyor.setPacketLocation(progress);
         if (progress == 1){
-            conveyor.passToNext();
-            return true;
+            return conveyor.passToNext();
         }
         return false;
     }
