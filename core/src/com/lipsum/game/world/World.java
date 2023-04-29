@@ -20,6 +20,10 @@ public class World extends Actor {
     private final OrthographicCamera camera;
     private final Texture cameraTexture = new Texture("camera.png");
 
+    // ingore these variables :)
+    private Coordinate estimatedCoord;
+    private Coordinate[] localArea;
+
     public World(int chunkSize, OrthographicCamera camera) {
         this.camera = camera;
         this.camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0);
@@ -40,40 +44,18 @@ public class World extends Actor {
             }
         }
         chunks.put(coord, newChunk);
-        System.out.printf("made a chunk at %d %d %n", x, y);
+        System.out.printf("made a chankoe @ %d : %d%n", x, y);
         return newChunk;
     }
 
     public void step() {
+        System.out.printf("coordinate estimate: %d : %d%n", estimatedCoord.x(), estimatedCoord.y());
+
         handleInput();
         camera.update();
         var chunkSize = Tile.WIDTH * CHUNK_SIZE;
-        Coordinate estimatedCoord = new Coordinate((int)(camera.position.x / chunkSize), (int)(camera.position.y / chunkSize));
-        Coordinate[] area = new Coordinate[]{
-                new Coordinate(estimatedCoord.x() + 1, estimatedCoord.y() + 1),
-                new Coordinate(estimatedCoord.x(), estimatedCoord.y() + 1),
-                new Coordinate(estimatedCoord.x() - 1, estimatedCoord.y() + 1),
-                new Coordinate(estimatedCoord.x() - 1, estimatedCoord.y()),
-                new Coordinate(estimatedCoord.x(), estimatedCoord.y()),
-                new Coordinate(estimatedCoord.x() + 1, estimatedCoord.y()),
-                new Coordinate(estimatedCoord.x() -1, estimatedCoord.y() - 1),
-                new Coordinate(estimatedCoord.x(), estimatedCoord.y() - 1),
-                new Coordinate(estimatedCoord.x() + 1, estimatedCoord.y() - 1),
-        };
-
-        for (var n : area) {
-            if (chunks.get(n) == null) {
-                chunks.put(n, makeBackgroundChunk(n.x(), n.y()));
-            }
-        }
-    }
-
-    @Override
-    public void draw(Batch batch, float parentAlpha) {
-        batch.setProjectionMatrix(camera.combined);
-        var chunkSize = Tile.WIDTH * CHUNK_SIZE;
-        Coordinate estimatedCoord = new Coordinate((int)(camera.position.x / chunkSize), (int)(camera.position.y / chunkSize));
-        Coordinate[] area = new Coordinate[]{
+        estimatedCoord = new Coordinate((int)Math.floor(camera.position.x / chunkSize), (int)Math.floor(camera.position.y / chunkSize));
+        localArea = new Coordinate[]{
             new Coordinate(estimatedCoord.x() + 1, estimatedCoord.y() + 1),
             new Coordinate(estimatedCoord.x(), estimatedCoord.y() + 1),
             new Coordinate(estimatedCoord.x() - 1, estimatedCoord.y() + 1),
@@ -85,7 +67,18 @@ public class World extends Actor {
             new Coordinate(estimatedCoord.x() + 1, estimatedCoord.y() - 1),
         };
 
-        for (var n : area) {
+        for (var n : localArea) {
+            if (chunks.get(n) == null) {
+                chunks.put(n, makeBackgroundChunk(n.x(), n.y()));
+            }
+        }
+    }
+
+    @Override
+    public void draw(Batch batch, float parentAlpha) {
+        batch.setProjectionMatrix(camera.combined);
+
+        for (var n : localArea) {
             if (chunks.get(n) != null) {
                 chunks.get(n).draw(batch);
             }
@@ -102,10 +95,10 @@ public class World extends Actor {
 
     private void handleInput() {
         if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-            camera.zoom += 0.2;
+            camera.zoom += 0.05;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.Q)) {
-            camera.zoom -= 0.2;
+            camera.zoom -= 0.05;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             camera.translate(-9, 0, 0);
