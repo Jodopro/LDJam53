@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.lipsum.game.utils.Twople;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.lipsum.game.world.tile.BackgroundTile;
 import com.lipsum.game.world.tile.Tile;
 
@@ -20,13 +21,16 @@ public class World extends Actor {
     private HashMap<Coordinate, Chunk> chunks;
     private final OrthographicCamera camera;
     private final Texture cameraTexture = new Texture("camera.png");
+    private final TileClickListener tileClickListener;
 
     // ingore these variables :)
     private Coordinate currentChunkCoord;
     private Coordinate[] localChunkArea;
 
-    public World(int chunkSideLengthInTiles, OrthographicCamera camera) {
-        this.camera = camera;
+    public World(int chunkSideLengthInTiles, Stage stage) {
+        super();
+        setStage(stage);
+        this.camera = (OrthographicCamera) stage.getCamera();
         this.camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0);
         this.camera.zoom = 10f;
         this.camera.update();
@@ -34,6 +38,9 @@ public class World extends Actor {
         this.CHUNK_DIMENSION_IN_TILES = chunkSideLengthInTiles;
         this.chunks = new HashMap<>();
         makeBackgroundChunk(0, 0);
+
+        tileClickListener = new TileClickListener(this);
+        stage.addListener(tileClickListener);
     }
 
     private Chunk makeBackgroundChunk(int x, int y) {
@@ -121,6 +128,7 @@ public class World extends Actor {
         for (var coord : chunks.keySet()) {
             chunks.get(coord).dispose();
         }
+        removeListener(tileClickListener);
     }
 
     private void handleInput() {
