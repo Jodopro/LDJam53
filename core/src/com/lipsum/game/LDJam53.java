@@ -23,10 +23,7 @@ import com.lipsum.game.factory.factories.PacketFactory;
 import com.lipsum.game.world.World;
 
 public class LDJam53 extends ApplicationAdapter {
-	SpriteBatch batch;
 	World world;
-	private OrthographicCamera camera;
-
 	InputMultiplexer inputMultiplexer;
 	HudUI hudUI = new HudUI();
 
@@ -44,19 +41,12 @@ public class LDJam53 extends ApplicationAdapter {
 	
 	@Override
 	public void create () {
-		camera = new OrthographicCamera(30f, 30f);
+		var camera = new OrthographicCamera(30f, 30f);
 		world = new World(10, camera);
-
-		camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0);
-		camera.zoom = 10f;
-		camera.update();
-
-		Gdx.graphics.setWindowedMode(800, 800);
-
-		batch = new SpriteBatch();
 		inputMultiplexer = new InputMultiplexer();
 
-		stage = new Stage(new ScreenViewport());
+		stage = new Stage(new ScreenViewport(camera));
+		stage.addActor(world);
 		stage.addActor(machineGroup);
 		stage.addActor(packetGroup);
 
@@ -85,17 +75,9 @@ public class LDJam53 extends ApplicationAdapter {
 	@Override
 	public void render () {
 		EventQueue.getInstance().handleAll();
-
-		handleInput();
-		camera.update();
-		batch.setProjectionMatrix(camera.combined);
 		world.step();
 
 		ScreenUtils.clear(0, 0, 0, 1);
-		batch.begin();
-		world.draw(batch, 1f);
-		batch.end();
-
 		float delta = Gdx.graphics.getDeltaTime();
 		stage.act(delta);
 		stage.draw();
@@ -104,32 +86,8 @@ public class LDJam53 extends ApplicationAdapter {
 	}
 	@Override
 	public void dispose () {
-		batch.dispose();
 		world.dispose();
 		stage.dispose();
 		hudUI.dispose();
-	}
-
-	private void handleInput() {
-		if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-			camera.zoom += 0.2;
-		}
-		if (Gdx.input.isKeyPressed(Input.Keys.Q)) {
-			camera.zoom -= 0.2;
-		}
-		if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-			camera.translate(-9, 0, 0);
-		}
-		if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-			camera.translate(9, 0, 0);
-		}
-		if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-			camera.translate(0, -9, 0);
-		}
-		if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-			camera.translate(0, 9, 0);
-		}
-
-		camera.zoom = MathUtils.clamp(camera.zoom, 0.1f, 1000/camera.viewportWidth);
 	}
 }
