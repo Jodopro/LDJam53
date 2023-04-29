@@ -49,12 +49,12 @@ public class World extends Actor {
     }
 
     public void step() {
+        var chunkSize = Tile.WIDTH * CHUNK_SIZE;
+        estimatedCoord = new Coordinate((int)Math.floor(camera.position.x / chunkSize), (int)Math.floor(camera.position.y / chunkSize));
         System.out.printf("coordinate estimate: %d : %d%n", estimatedCoord.x(), estimatedCoord.y());
 
         handleInput();
         camera.update();
-        var chunkSize = Tile.WIDTH * CHUNK_SIZE;
-        estimatedCoord = new Coordinate((int)Math.floor(camera.position.x / chunkSize), (int)Math.floor(camera.position.y / chunkSize));
         localArea = new Coordinate[]{
             new Coordinate(estimatedCoord.x() + 1, estimatedCoord.y() + 1),
             new Coordinate(estimatedCoord.x(), estimatedCoord.y() + 1),
