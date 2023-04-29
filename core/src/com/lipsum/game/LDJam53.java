@@ -47,7 +47,6 @@ public class LDJam53 extends ApplicationAdapter {
 		camera = new OrthographicCamera(30f, 30f);
 		world = new World(10, camera);
 
-
 		camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0);
 		camera.zoom = 10f;
 		camera.update();
