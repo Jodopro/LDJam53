@@ -20,10 +20,7 @@ public class TileClickListener extends ClickListener {
     @Override
     public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
         super.touchDown(event, x, y, pointer, button);
-        System.out.println("x: " + x + "y: " + y);
-//      Get the tile...
-//      World.get
-        EventQueue.getInstance().invoke(new TileClickedEvent(null, new WorldCoordinate(x, y)));
+        EventQueue.getInstance().invoke(new TileClickedEvent(world.tileAt(x, y), new WorldCoordinate(x, y)));
         return true;
     }
 

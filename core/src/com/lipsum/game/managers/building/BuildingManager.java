@@ -46,6 +46,9 @@ public class BuildingManager {
         try {
             int gridX = Math.floorDiv((int) tileClickedEvent.getWorldCoordinate().x(), Tile.WIDTH);
             int gridY = Math.floorDiv((int) tileClickedEvent.getWorldCoordinate().y(), Tile.HEIGHT);
+
+            // TODO: Check if empty (instead of this try-catch) and check cost/currency
+
             BuildingCatalog.produce(new Coordinate(gridX, gridY), direction, selectedType);
         } catch (IllegalStateException e) {
             System.out.println("Tile already occupied :(");
