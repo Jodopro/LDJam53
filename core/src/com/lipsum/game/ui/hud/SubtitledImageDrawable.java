@@ -9,25 +9,39 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.Null;
 
+/**
+ * Draws an image button with a subtitle. Should be given to the buttons as drawable
+ */
 public class SubtitledImageDrawable implements Drawable {
+
+    private static final Color OVERLAY_COLOUR_PRESSED = new Color(0.0f, 0.0f, 0.0f, 0.3f);
+    private static final Color OVERLAY_COLOUR_CHECKED = new Color(0.0f, 0.0f, 0.0f, 0.1f);
+
+    private static final Color BORDER_LIGHT = new Color(1.0f, 1.0f, 1.0f, 0.1f);
+    private static final Color BORDER_DARK = new Color(0.0f, 0.0f, 0.0f, 0.1f);
+    private static final Color BORDER_CHECKED = new Color(1.0f, 0.0f, 0.0f, 0.1f);
+
+    private static final int BORDER_SIZE = 2;
+
+
     private final Texture texture;
     private final String text;
     private final BitmapFont font;
-    private final Color overlay;
+    private final ButtonState state;
+    private final ShapeRenderer shapeRenderer;
 
-    public SubtitledImageDrawable(Texture texture, String text, BitmapFont font, @Null Color overlay) {
+    public SubtitledImageDrawable(Texture texture, String text, BitmapFont font, ButtonState state) {
         this.texture = texture;
         this.text = text;
         this.font = font;
-        this.overlay = overlay;
+        this.state = state;
+        shapeRenderer = new ShapeRenderer();
     }
 
     @Override
     public void draw(Batch batch, float x, float y, float width, float height) {
         float textureScale = width / texture.getWidth();
-        ShapeRenderer shapeRenderer = new ShapeRenderer();
         shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
         batch.end();
 
@@ -41,19 +55,45 @@ public class SubtitledImageDrawable implements Drawable {
         batch.draw(texture, x, y + font.getLineHeight(), textureScale * texture.getWidth(), textureScale * texture.getHeight());
         font.draw(batch, text, x, y + font.getLineHeight(), width, Align.center, false);
 
-        if (overlay != null) {
+        if (state != ButtonState.DEFAULT) {
             batch.end();
 
             Gdx.gl.glEnable(GL20.GL_BLEND);
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            shapeRenderer.setColor(overlay);
+            // Overlay (darkens image)
+            shapeRenderer.setColor(state == ButtonState.PRESSED ? OVERLAY_COLOUR_PRESSED : OVERLAY_COLOUR_CHECKED);
             shapeRenderer.rect(x, y, width, height);
+
+            // Borders
+            drawBorders(shapeRenderer, x, y, width, height);
+
             shapeRenderer.end();
             Gdx.gl.glDisable(GL20.GL_BLEND);
 
 
             batch.begin();
         }
+    }
+
+    private void drawBorders(ShapeRenderer shapeRenderer, float x, float y, float width, float height) {
+        Color color1 = switch (state) {
+            case DEFAULT -> BORDER_LIGHT;
+            case PRESSED -> BORDER_DARK;
+            case SELECTED -> BORDER_CHECKED;
+        };
+        Color color2 = switch (state) {
+            case DEFAULT -> BORDER_DARK;
+            case PRESSED -> BORDER_LIGHT;
+            case SELECTED -> BORDER_CHECKED;
+        };
+
+        shapeRenderer.setColor(color1);
+        shapeRenderer.rect(x, y, BORDER_SIZE, height);
+        shapeRenderer.rect(x + BORDER_SIZE, y, width - BORDER_SIZE * 2, BORDER_SIZE);
+
+        shapeRenderer.setColor(color2);
+        shapeRenderer.rect(x + width - BORDER_SIZE, y, BORDER_SIZE, height);
+        shapeRenderer.rect(x + BORDER_SIZE, y + height - BORDER_SIZE, width - BORDER_SIZE * 2, BORDER_SIZE);
     }
 
     @Override

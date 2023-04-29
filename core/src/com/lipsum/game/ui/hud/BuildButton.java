@@ -7,20 +7,17 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import static com.lipsum.game.ui.hud.BuildMenu.getFont;
 
 public class BuildButton extends Button {
-    private static final Color OVERLAY_COLOUR_SELECTED = new Color(0.0f, 0.0f, 0.0f, 0.3f);
-    private static final Color OVERLAY_COLOUR_HOVER = new Color(0.0f, 0.0f, 0.0f, 0.1f);
 
     private final Texture texture;
 
     public BuildButton(Texture texture) {
         super(new ButtonStyle(
-                new SubtitledImageDrawable(texture, "1000", getFont(), null),
-                new SubtitledImageDrawable(texture, "1000", getFont(), OVERLAY_COLOUR_SELECTED),
-                new SubtitledImageDrawable(texture, "1000", getFont(), OVERLAY_COLOUR_HOVER)
+                new SubtitledImageDrawable(texture, "1000", getFont(), ButtonState.DEFAULT),
+                new SubtitledImageDrawable(texture, "1000", getFont(), ButtonState.PRESSED),
+                new SubtitledImageDrawable(texture, "1000", getFont(), ButtonState.SELECTED)
 
         ));
 
-        addListener(getClickListener());
         this.texture = texture;
     }
 
