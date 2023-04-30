@@ -9,6 +9,7 @@ import com.lipsum.game.factory.AbstractFactory;
 import com.lipsum.game.factory.factories.ConveyorFactory;
 import com.lipsum.game.managers.building.catalog.BuildingType;
 import com.lipsum.game.util.Direction;
+import com.lipsum.game.util.PacketType;
 import com.lipsum.game.world.tile.Tile;
 
 import java.util.ArrayList;
@@ -22,10 +23,13 @@ import static com.lipsum.game.util.DrawUtil.drawRotated;
 
 
 public class Conveyor extends Building {
+    private static final Random rand = new Random();
     public static AbstractFactory factory = ConveyorFactory.getInstance();
     private Direction direction = Direction.EAST;
 
     private class Waiting {
+    protected List<PacketType> types;
+    private class Waiting{
         Direction direction;
         Packet packet;
         Conveyor previousConveyor;
@@ -64,6 +68,25 @@ public class Conveyor extends Building {
             case SPLITTER -> init(x, y, List.of(direction.opposite()),
                     List.of(direction, direction.rotateLeft(), direction.rotateRight()));
             default -> throw new IllegalArgumentException("Unknown building type " + buildingType);
+    public Conveyor(int x, int y, Direction direction){
+        this(x, y, new ArrayList<>(), new ArrayList<>());
+        outputs.add(direction);
+        switch (direction) {
+            case EAST -> inputs.add(Direction.WEST);
+            case WEST -> inputs.add(Direction.EAST);
+            case SOUTH -> inputs.add(Direction.NORTH);
+            case NORTH -> inputs.add(Direction.SOUTH);
+        }
+    }
+
+    public Conveyor(int x, int y, Direction direction, PacketType type){
+        this(x, y, new ArrayList<>(), new ArrayList<>(), type);
+        outputs.add(direction);
+        switch (direction) {
+            case EAST -> inputs.add(Direction.WEST);
+            case WEST -> inputs.add(Direction.EAST);
+            case SOUTH -> inputs.add(Direction.NORTH);
+            case NORTH -> inputs.add(Direction.SOUTH);
         }
     }
 
@@ -74,11 +97,26 @@ public class Conveyor extends Building {
 
     @Deprecated
     public Conveyor(int x, int y, List<Direction> inputs, List<Direction> outputs) {
+    public Conveyor(int x, int y, List<Direction> inputs, List<Direction> outputs, List<PacketType> types){
         super(x, y);
         init(x, y, inputs, outputs);
+        this.types = types;
+        setColor(0,1,0,1);
+        this.inputs = inputs;
+        this.outputs = outputs;
     }
 
-    private ShapeRenderer renderer = new ShapeRenderer();
+    public Conveyor(int x, int y, List<Direction> inputs, List<Direction> outputs){
+        this(x, y, inputs, outputs, new ArrayList<>());
+        types.add(PacketType.RED);
+        types.add(PacketType.YELLOW);
+        types.add(PacketType.BLUE);
+    }
+
+    public Conveyor(int x, int y, List<Direction> inputs, List<Direction> outputs, PacketType type){
+        this(x, y, inputs, outputs, new ArrayList<>());
+        types.add(type);
+    }
 
     public void setPacketLocation(float progress) {
         float x = getX() + Tile.WIDTH / 10;
@@ -105,7 +143,7 @@ public class Conveyor extends Building {
         }
     }
 
-    public void passToNext() {
+    public boolean passToNext(){
         Building b = null;
         Direction d = null;
         if (currentTo == Direction.NORTH && northBuilding != null) {
@@ -125,16 +163,10 @@ public class Conveyor extends Building {
             Conveyor c = (Conveyor) b;
             if (c.allowsInputFrom().contains(this)) {
                 c.addPacket(packet, this, d);
-            } else {
-                //TODO: add listener for updates
+                return true;
             }
-        } else {
-            //TODO: add listener for updates
         }
-//        if (packet == null){
-//            getNextPacket();
-//        }
-
+        return false;
     }
 
     public void addPacket(Packet p, Conveyor from, Direction d) {
@@ -151,9 +183,8 @@ public class Conveyor extends Building {
             if (next != null) {
                 packet = next.packet;
                 currentFrom = next.direction;
-                Random rand = new Random();
                 currentTo = outputs.get(rand.nextInt(outputs.size()));
-                MoveConveyor moveConveyor = new MoveConveyor(this, 1);
+                MoveConveyor moveConveyor = new MoveConveyor(this, 2);
                 this.addAction(moveConveyor);
                 next.previousConveyor.packet = null;
                 next.previousConveyor.getNextPacket();
@@ -161,6 +192,21 @@ public class Conveyor extends Building {
         }
     }
 
+
+    public List<Building> allowsInputFrom(){
+        List<Building> l = new ArrayList<>();
+        for (Direction d:inputs){
+            switch (d){
+                case EAST -> l.add(eastBuilding);
+                case WEST -> l.add(westBuilding);
+                case NORTH -> l.add(northBuilding);
+                case SOUTH -> l.add(southBuilding);
+            }
+        }
+        return l;
+    }
+
+    @Override
     public void draw(Batch batch, float parentAlpha) {
         Texture texture = null;
         if (buildingType != null) {
@@ -184,44 +230,25 @@ public class Conveyor extends Building {
             renderer.begin(ShapeRenderer.ShapeType.Filled);
             renderer.setColor(getColor());
             renderer.rect(0, 0, getWidth(), getHeight());
-            renderer.end();
+            int i = 0;
+        for (PacketType type:types){
+            switch(type){
+                case RED -> renderer.setColor(1,0,0,1);
+                case BLUE -> renderer.setColor(0,0,1,1);
+                case YELLOW -> renderer.setColor(1,1,0,1);
+            }
+            renderer.rect(i*getWidth()/types.size(), 0, getWidth()/types.size(), 5);
+            renderer.rect(getWidth()-5, i*getHeight()/types.size(), 5, getHeight()/types.size());
+            renderer.rect(getWidth() - (1+i)*getWidth()/types.size(), getHeight()-5, getWidth()/types.size(), 5);
+            renderer.rect(0, getHeight() - (1+i)*getHeight()/types.size(), 5, getHeight()/types.size());
+            i += 1;
+        }
+        renderer.end();
 
             batch.begin();
         } else {
             drawRotated(batch, texture, getX(), getY(),
                     (float) (direction.rotateRight().toRadians() * (180.0f / Math.PI)), getWidth(), getHeight());
         }
-    }
-
-    public boolean hasPacket() {
-        return packet != null;
-    }
-
-    public List<Building> allowsInputFrom() {
-        List<Building> l = new ArrayList<>();
-        for (Direction d : inputs) {
-            switch (d) {
-                case EAST -> l.add(eastBuilding);
-                case WEST -> l.add(westBuilding);
-                case NORTH -> l.add(northBuilding);
-                case SOUTH -> l.add(southBuilding);
-            }
-        }
-        return l;
-    }
-
-    @Deprecated
-    public void setCurrentFrom(Direction currentFrom) {
-        this.currentFrom = currentFrom;
-    }
-
-    @Deprecated
-    public void setCurrentTo(Direction currentTo) {
-        this.currentTo = currentTo;
-    }
-
-    @Deprecated
-    public void setPacket(Packet packet) {
-        this.packet = packet;
     }
 }
