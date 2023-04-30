@@ -6,6 +6,7 @@ import com.lipsum.game.actions.MoveConveyor;
 import com.lipsum.game.factory.AbstractFactory;
 import com.lipsum.game.factory.factories.ConveyorFactory;
 import com.lipsum.game.util.Direction;
+import com.lipsum.game.util.PacketType;
 import com.lipsum.game.world.tile.Tile;
 
 import java.util.ArrayList;
@@ -16,8 +17,9 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 
 public class Conveyor extends Building {
+    private static final Random rand = new Random();
     public static AbstractFactory factory = ConveyorFactory.getInstance();
-
+    protected List<PacketType> types;
     private class Waiting{
         Direction direction;
         Packet packet;
@@ -36,10 +38,7 @@ public class Conveyor extends Building {
     private Queue<Waiting> waitingQueue = new ConcurrentLinkedQueue();
 
     public Conveyor(int x, int y, Direction direction){
-        super(x, y);
-        setColor(0,1,0,1);
-        inputs = new ArrayList<>();
-        outputs = new ArrayList<>();
+        this(x, y, new ArrayList<>(), new ArrayList<>());
         outputs.add(direction);
         switch (direction) {
             case EAST -> inputs.add(Direction.WEST);
@@ -49,11 +48,35 @@ public class Conveyor extends Building {
         }
     }
 
-    public Conveyor(int x, int y, List<Direction> inputs, List<Direction> outputs){
+    public Conveyor(int x, int y, Direction direction, PacketType type){
+        this(x, y, new ArrayList<>(), new ArrayList<>(), type);
+        outputs.add(direction);
+        switch (direction) {
+            case EAST -> inputs.add(Direction.WEST);
+            case WEST -> inputs.add(Direction.EAST);
+            case SOUTH -> inputs.add(Direction.NORTH);
+            case NORTH -> inputs.add(Direction.SOUTH);
+        }
+    }
+
+    public Conveyor(int x, int y, List<Direction> inputs, List<Direction> outputs, List<PacketType> types){
         super(x, y);
+        this.types = types;
         setColor(0,1,0,1);
         this.inputs = inputs;
         this.outputs = outputs;
+    }
+
+    public Conveyor(int x, int y, List<Direction> inputs, List<Direction> outputs){
+        this(x, y, inputs, outputs, new ArrayList<>());
+        types.add(PacketType.RED);
+        types.add(PacketType.YELLOW);
+        types.add(PacketType.BLUE);
+    }
+
+    public Conveyor(int x, int y, List<Direction> inputs, List<Direction> outputs, PacketType type){
+        this(x, y, inputs, outputs, new ArrayList<>());
+        types.add(type);
     }
 
     public void setPacketLocation(float progress){
@@ -121,7 +144,6 @@ public class Conveyor extends Building {
             if (next != null){
                 packet = next.packet;
                 currentFrom = next.direction;
-                Random rand = new Random();
                 currentTo = outputs.get(rand.nextInt(outputs.size()));
                 MoveConveyor moveConveyor = new MoveConveyor(this, 2);
                 this.addAction(moveConveyor);
@@ -145,18 +167,32 @@ public class Conveyor extends Building {
         return l;
     }
 
-    @Deprecated
-    public void setCurrentFrom(Direction currentFrom) {
-        this.currentFrom = currentFrom;
-    }
+    @Override
+    public void draw (Batch batch, float parentAlpha) {
+        batch.end();
 
-    @Deprecated
-    public void setCurrentTo(Direction currentTo) {
-        this.currentTo = currentTo;
-    }
+        renderer.setProjectionMatrix(batch.getProjectionMatrix());
+        renderer.setTransformMatrix(batch.getTransformMatrix());
+        renderer.translate(getX(), getY(), 0);
 
-    @Deprecated
-    public void setPacket(Packet packet) {
-        this.packet = packet;
+        renderer.begin(ShapeRenderer.ShapeType.Filled);
+        renderer.setColor(getColor());
+        renderer.rect(0, 0, getWidth(), getHeight());
+        int i = 0;
+        for (PacketType type:types){
+            switch(type){
+                case RED -> renderer.setColor(1,0,0,1);
+                case BLUE -> renderer.setColor(0,0,1,1);
+                case YELLOW -> renderer.setColor(1,1,0,1);
+            }
+            renderer.rect(i*getWidth()/types.size(), 0, getWidth()/types.size(), 5);
+            renderer.rect(getWidth()-5, i*getHeight()/types.size(), 5, getHeight()/types.size());
+            renderer.rect(getWidth() - (1+i)*getWidth()/types.size(), getHeight()-5, getWidth()/types.size(), 5);
+            renderer.rect(0, getHeight() - (1+i)*getHeight()/types.size(), 5, getHeight()/types.size());
+            i += 1;
+        }
+        renderer.end();
+
+        batch.begin();
     }
 }

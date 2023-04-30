@@ -3,12 +3,10 @@ package com.lipsum.game.entities;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.lipsum.game.LDJam53;
-import com.lipsum.game.event.EventQueue;
-import com.lipsum.game.factory.factories.BuildingFactory;
 import com.lipsum.game.world.Coordinate;
 import com.lipsum.game.world.World;
 import com.lipsum.game.world.tile.Tile;
-import com.lipsum.game.world.tile.TileType;
+import com.lipsum.game.util.TileType;
 
 import static java.lang.Math.abs;
 
@@ -59,7 +57,7 @@ public class Building extends Entity{
         remove();
     }
 
-    private ShapeRenderer renderer = new ShapeRenderer();
+    protected ShapeRenderer renderer = new ShapeRenderer();
     public void draw (Batch batch, float parentAlpha) {
         batch.end();
 
