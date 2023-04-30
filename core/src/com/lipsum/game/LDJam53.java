@@ -21,8 +21,10 @@ import com.lipsum.game.entities.Packet;
 import com.lipsum.game.factory.factories.BuildingFactory;
 import com.lipsum.game.factory.factories.ConveyorFactory;
 import com.lipsum.game.factory.factories.EntityFactory;
+import com.lipsum.game.states.PlayerState;
 import com.lipsum.game.ui.hud.HudUI;
 import com.lipsum.game.factory.factories.PacketFactory;
+import com.lipsum.game.util.Direction;
 import com.lipsum.game.world.World;
 
 import java.util.List;
@@ -31,7 +33,8 @@ import java.util.Random;
 public class LDJam53 extends ApplicationAdapter {
 	World world;
 	InputMultiplexer inputMultiplexer;
-	HudUI hudUI = new HudUI();
+	PlayerState playerState;
+	HudUI hudUI;
 
 	Stage stage;
 	public static Group packetGroup = new Group();
@@ -48,30 +51,33 @@ public class LDJam53 extends ApplicationAdapter {
 	@Override
 	public void create () {
 		var camera = new OrthographicCamera(30f, 30f);
-		world = World.init(10, camera);
+
 		inputMultiplexer = new InputMultiplexer();
+		hudUI = new HudUI();
+
+		hudUI.create(inputMultiplexer);
 
 		stage = new Stage(new ScreenViewport(camera));
+		world = World.init(10, camera);
 		stage.addActor(world);
 		stage.addActor(machineGroup);
 		stage.addActor(packetGroup);
 
-		Conveyor c1 = new Conveyor(3, 2, Conveyor.Direction.NORTH);
-		new Conveyor(3, 3, Conveyor.Direction.NORTH);
-		new Conveyor(3, 4, List.of(Conveyor.Direction.SOUTH), List.of(Conveyor.Direction.WEST, Conveyor.Direction.EAST));
-		new Conveyor(2, 4, Conveyor.Direction.WEST);
-		new Conveyor(4, 4, Conveyor.Direction.EAST);
-		new Conveyor(5, 4, List.of(Conveyor.Direction.WEST), List.of(Conveyor.Direction.NORTH));
-		new Conveyor(1, 4, List.of(Conveyor.Direction.EAST), List.of(Conveyor.Direction.NORTH));
-		new Conveyor(5, 5, Conveyor.Direction.NORTH);
-		new Conveyor(1, 5, Conveyor.Direction.NORTH);
-		new Producer(3, 1, Conveyor.Direction.NORTH);
-		new Consumer(1,6,Conveyor.Direction.NORTH);
-		new Consumer(5,6,Conveyor.Direction.NORTH);
+		Conveyor c1 = new Conveyor(3, 2, Direction.NORTH);
+		new Conveyor(3, 3, Direction.NORTH);
+		new Conveyor(3, 4, List.of(Direction.SOUTH), List.of(Direction.WEST, Direction.EAST));
+		new Conveyor(2, 4, Direction.WEST);
+		new Conveyor(4, 4, Direction.EAST);
+		new Conveyor(5, 4, List.of(Direction.WEST), List.of(Direction.NORTH));
+		new Conveyor(1, 4, List.of(Direction.EAST), List.of(Direction.NORTH));
+		new Conveyor(5, 5, Direction.NORTH);
+		new Conveyor(1, 5, Direction.NORTH);
+		new Producer(3, 1, Direction.NORTH);
+		new Consumer(1,6,Direction.NORTH);
+		new Consumer(5,6,Direction.NORTH);
 
 		inputMultiplexer.addProcessor(stage);
 
-		hudUI.create(inputMultiplexer);
 
 		Gdx.input.setInputProcessor(inputMultiplexer);
 	}

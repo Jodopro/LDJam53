@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.lipsum.game.actions.MoveConveyor;
 import com.lipsum.game.factory.AbstractFactory;
 import com.lipsum.game.factory.factories.ConveyorFactory;
+import com.lipsum.game.util.Direction;
 import com.lipsum.game.world.tile.Tile;
 
 import java.util.ArrayList;
@@ -16,17 +17,12 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Conveyor extends Building {
     public static AbstractFactory factory = ConveyorFactory.getInstance();
-    public enum Direction {
-        NORTH,
-        SOUTH,
-        EAST,
-        WEST,
-    }
+
     private class Waiting{
-        Conveyor.Direction direction;
+        Direction direction;
         Packet packet;
         Conveyor previousConveyor;
-        private Waiting(Conveyor.Direction d, Packet p, Conveyor c){
+        private Waiting(Direction d, Packet p, Conveyor c){
             direction = d;
             packet = p;
             this.previousConveyor = c;

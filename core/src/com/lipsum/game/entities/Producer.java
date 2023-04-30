@@ -1,11 +1,12 @@
 package com.lipsum.game.entities;
 
 import com.lipsum.game.actions.CreatePacket;
+import com.lipsum.game.util.Direction;
 
 import java.util.ArrayList;
 
 public class Producer extends Conveyor {
-    public Producer(int x, int y, Conveyor.Direction direction){
+    public Producer(int x, int y, Direction direction){
         super(x, y, direction);
         setColor(0,1,1,1);
         inputs = new ArrayList<>();
