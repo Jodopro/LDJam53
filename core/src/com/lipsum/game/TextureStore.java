@@ -26,6 +26,10 @@ public class TextureStore {
     public static final Animation<Texture> MERGER =
             loadMultiFileAnimation("textures/merge/mergy_boi%d.png", 8, 0.1f);
 
+    public static final Texture CONSUMER = new Texture(Gdx.files.internal("textures/consumer.png"));
+    public static final Texture PRODUCER = new Texture(Gdx.files.internal("textures/producer.png"));
+
+
     public static final Texture PACKET = new Texture(Gdx.files.internal("textures/packet.png"));
 
     public static final Texture BUILD_BUTTON = new Texture(Gdx.files.internal("textures/build_button.png"));

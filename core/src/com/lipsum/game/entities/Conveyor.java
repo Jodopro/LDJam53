@@ -228,6 +228,8 @@ public class Conveyor extends Building {
                 case BELT_LEFT -> TextureStore.CONVEYOR_BELT_LEFT.getKeyFrame(stateTime, true);
                 case MERGER -> TextureStore.MERGER.getKeyFrame(stateTime, true);
                 case SPLITTER -> TextureStore.SPLITTER.getKeyFrame(stateTime, true);
+                case PRODUCER -> TextureStore.PRODUCER;
+                case CONSUMER -> TextureStore.CONSUMER;
                 default -> null;
             };
         }
