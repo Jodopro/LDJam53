@@ -1,39 +1,32 @@
 package com.lipsum.game.ui.hud;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Align;
+import com.lipsum.game.TextureStore;
+import com.lipsum.game.managers.building.catalog.BuildingCatalog;
+import com.lipsum.game.managers.building.catalog.BuildingType;
 
 /**
  * Draws an image button with a subtitle. Should be given to the buttons as drawable
  */
 public class SubtitledImageDrawable implements Drawable {
 
-    private static final Color OVERLAY_COLOUR_PRESSED = new Color(0.0f, 0.0f, 0.0f, 0.3f);
-    private static final Color OVERLAY_COLOUR_CHECKED = new Color(0.0f, 0.0f, 0.0f, 0.1f);
-
-    private static final Color BORDER_LIGHT = new Color(1.0f, 1.0f, 1.0f, 0.1f);
-    private static final Color BORDER_DARK = new Color(0.0f, 0.0f, 0.0f, 0.1f);
-    private static final Color BORDER_CHECKED = new Color(1.0f, 0.0f, 0.0f, 0.1f);
-
     private static final int BORDER_SIZE = 2;
 
-
-    private final Texture texture;
-    private final String text;
     private final BitmapFont font;
     private final ButtonState state;
     private final ShapeRenderer shapeRenderer;
+    private final BuildMenu buildMenu;
+    private final BuildingType type;
 
-    public SubtitledImageDrawable(Texture texture, String text, BitmapFont font, ButtonState state) {
-        this.texture = texture;
-        this.text = text;
+    public SubtitledImageDrawable(BuildMenu buildMenu, BuildingType type, BitmapFont font, ButtonState state) {
+        this.buildMenu = buildMenu;
+        this.type = type;
         this.font = font;
         this.state = state;
         shapeRenderer = new ShapeRenderer();
@@ -41,59 +34,38 @@ public class SubtitledImageDrawable implements Drawable {
 
     @Override
     public void draw(Batch batch, float x, float y, float width, float height) {
-        float textureScale = width / texture.getWidth();
-        shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
-        batch.end();
+        float textureScale = 3;
+        batch.draw(getBackgroundTexture(), x, y, width, height);
+        Texture btex = getBuildingTexture();
 
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(BuildMenu.BACKGROUND_COLOUR);
-        shapeRenderer.rect(x, y, width, height);
-        shapeRenderer.end();
-
-
-        batch.begin();
-        batch.draw(texture, x, y + font.getLineHeight() * 2, textureScale * texture.getWidth(), textureScale * texture.getHeight());
-        font.draw(batch, text, x, y + font.getLineHeight() * 2, width, Align.center, false);
-
-        if (state != ButtonState.DEFAULT) {
-            batch.end();
-
-            Gdx.gl.glEnable(GL20.GL_BLEND);
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            // Overlay (darkens image)
-            shapeRenderer.setColor(state == ButtonState.PRESSED ? OVERLAY_COLOUR_PRESSED : OVERLAY_COLOUR_CHECKED);
-            shapeRenderer.rect(x, y, width, height);
-
-            // Borders
-            drawBorders(shapeRenderer, x, y, width, height);
-
-            shapeRenderer.end();
-            Gdx.gl.glDisable(GL20.GL_BLEND);
-
-
-            batch.begin();
-        }
+        float angle = buildMenu.getBuildingOrientation().rotateRight().toDegrees();
+        // Just trust me that this centers (usually)
+        batch.draw(btex, x + width/2 - btex.getWidth() * textureScale / 2 ,
+                y + height/2 - btex.getHeight() * textureScale / 2 + font.getLineHeight() /2 ,
+                btex.getWidth() * textureScale / 2, btex.getHeight() * textureScale / 2,
+                textureScale * btex.getWidth(), textureScale * btex.getHeight(),
+                1.0f, 1.0f, angle, 0, 0, btex.getWidth(), btex.getHeight(), false, false);
+        font.draw(batch, "$" + BuildingCatalog.getCost(type), x, y + font.getLineHeight() + 2, width, Align.center, false);
     }
 
-    private void drawBorders(ShapeRenderer shapeRenderer, float x, float y, float width, float height) {
-        Color color1 = switch (state) {
-            case DEFAULT -> BORDER_LIGHT;
-            case PRESSED -> BORDER_DARK;
-            case SELECTED -> BORDER_CHECKED;
+    private TextureRegion getBackgroundTexture() {
+        return switch (state) {
+            case DEFAULT -> BuildButtonHelper.UNPRESSED_BUTTON;
+            case PRESSED -> BuildButtonHelper.PRESSED_BUTTON;
+            case SELECTED -> BuildButtonHelper.SELECTED_BUTTON;
         };
-        Color color2 = switch (state) {
-            case DEFAULT -> BORDER_DARK;
-            case PRESSED -> BORDER_LIGHT;
-            case SELECTED -> BORDER_CHECKED;
+    }
+
+    private Texture getBuildingTexture() {
+        final float time = 0.5f;
+        return switch (type) {
+            case BELT_STRAIGHT -> TextureStore.CONVEYOR_BELT_STRAIGHT.getKeyFrame(time, true);
+            case BELT_RIGHT -> TextureStore.CONVEYOR_BELT_RIGHT.getKeyFrame(time, true);
+            case BELT_LEFT -> TextureStore.CONVEYOR_BELT_LEFT.getKeyFrame(time, true);
+            case MERGER -> TextureStore.MERGER.getKeyFrame(time, true);
+            case SPLITTER -> TextureStore.SPLITTER.getKeyFrame(time, true);
+            default -> null;
         };
-
-        shapeRenderer.setColor(color1);
-        shapeRenderer.rect(x, y, BORDER_SIZE, height);
-        shapeRenderer.rect(x + BORDER_SIZE, y, width - BORDER_SIZE * 2, BORDER_SIZE);
-
-        shapeRenderer.setColor(color2);
-        shapeRenderer.rect(x + width - BORDER_SIZE, y, BORDER_SIZE, height);
-        shapeRenderer.rect(x + BORDER_SIZE, y + height - BORDER_SIZE, width - BORDER_SIZE * 2, BORDER_SIZE);
     }
 
     @Override
@@ -138,7 +110,7 @@ public class SubtitledImageDrawable implements Drawable {
 
     @Override
     public float getMinWidth() {
-        return texture.getWidth();
+        return BuildButtonHelper.SIZE * BuildButtonHelper.SCALE;
     }
 
     @Override
@@ -148,7 +120,7 @@ public class SubtitledImageDrawable implements Drawable {
 
     @Override
     public float getMinHeight() {
-        return texture.getHeight() + font.getLineHeight();
+        return BuildButtonHelper.SIZE * BuildButtonHelper.SCALE;
     }
 
     @Override

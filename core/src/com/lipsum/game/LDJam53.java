@@ -23,9 +23,6 @@ import com.lipsum.game.util.Direction;
 import com.lipsum.game.util.PacketType;
 import com.lipsum.game.world.World;
 
-import java.util.List;
-import java.util.Random;
-
 public class LDJam53 extends ApplicationAdapter {
 	public static float stateTime = 0f;
 	World world;

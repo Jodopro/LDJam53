@@ -7,6 +7,7 @@ import com.lipsum.game.factory.factories.EntityFactory;
  * Base entity, for all entities in the game (i.e. Conveyors, I/O nodes, mergers, obstacles, packets)
  */
 public abstract class Entity extends Actor {
+    public static final int RENDER_SCALE = 4;
     public Entity(){
         EntityFactory.getInstance().addManagedObject(this);
     }

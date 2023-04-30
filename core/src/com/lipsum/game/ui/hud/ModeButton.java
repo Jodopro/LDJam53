@@ -5,50 +5,34 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.lipsum.game.event.EventQueue;
-import com.lipsum.game.event.events.SelectedBuildingTypeChangedEvent;
 import com.lipsum.game.event.events.SelectedModeChangedEvent;
-import com.lipsum.game.managers.building.catalog.BuildingCatalog;
 import com.lipsum.game.managers.building.catalog.BuildingMode;
-import com.lipsum.game.managers.building.catalog.BuildingType;
-
-import static com.lipsum.game.ui.hud.BuildMenu.getFont;
 
 public class ModeButton extends Button {
 
-    private final Texture texture;
     private final BuildingMode type;
     private final ButtonClickedListener listener;
 
     public ModeButton(Texture texture, BuildingMode type) {
         super(new ButtonStyle(
-                new SubtitledImageDrawable(texture, type.toString(),
-                        getFont(), ButtonState.DEFAULT),
-                new SubtitledImageDrawable(texture, type.toString(),
-                        getFont(), ButtonState.PRESSED),
-                new SubtitledImageDrawable(texture, type.toString(),
-                        getFont(), ButtonState.SELECTED)
+                new ModeButtonDrawable(type, ButtonState.DEFAULT),
+                new ModeButtonDrawable(type, ButtonState.PRESSED),
+                new ModeButtonDrawable(type, ButtonState.SELECTED)
         ));
 
         this.type = type;
-        this.texture = texture;
         listener = new ButtonClickedListener();
         addListener(listener);
     }
 
     @Override
     public float getPrefWidth() {
-        if (texture == null) {
-            return 0;
-        }
-        return texture.getWidth() * 6;
+        return BuildButtonHelper.SIZE * BuildButtonHelper.SCALE;
     }
 
     @Override
     public float getPrefHeight() {
-        if (texture == null) {
-            return 0;
-        }
-        return texture.getHeight() * 6 + getFont().getLineHeight() * 2;
+        return BuildButtonHelper.SIZE * BuildButtonHelper.SCALE;
     }
 
     @Override
