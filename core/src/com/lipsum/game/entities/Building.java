@@ -3,6 +3,8 @@ package com.lipsum.game.entities;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.lipsum.game.LDJam53;
+import com.lipsum.game.managers.building.catalog.BuildingMode;
+import com.lipsum.game.util.Direction;
 import com.lipsum.game.world.Coordinate;
 import com.lipsum.game.world.World;
 import com.lipsum.game.world.tile.Tile;
@@ -71,5 +73,9 @@ public class Building extends Entity{
         renderer.end();
 
         batch.begin();
+    }
+
+    public void rotate(){}
+    public void onUpdateNeighbour(Direction direction){
     }
 }

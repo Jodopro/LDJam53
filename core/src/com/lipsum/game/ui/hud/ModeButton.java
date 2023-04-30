@@ -1,6 +1,5 @@
 package com.lipsum.game.ui.hud;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -14,19 +13,19 @@ import com.lipsum.game.managers.building.catalog.BuildingType;
 
 import static com.lipsum.game.ui.hud.BuildMenu.getFont;
 
-public class BuildButton extends Button {
+public class ModeButton extends Button {
 
     private final Texture texture;
-    private final BuildingType type;
+    private final BuildingMode type;
     private final ButtonClickedListener listener;
 
-    public BuildButton(Texture texture, BuildingType type) {
+    public ModeButton(Texture texture, BuildingMode type) {
         super(new ButtonStyle(
-                new SubtitledImageDrawable(texture, type + "\n" + BuildingCatalog.getCost(type),
+                new SubtitledImageDrawable(texture, type.toString(),
                         getFont(), ButtonState.DEFAULT),
-                new SubtitledImageDrawable(texture, type + "\n" + BuildingCatalog.getCost(type),
+                new SubtitledImageDrawable(texture, type.toString(),
                         getFont(), ButtonState.PRESSED),
-                new SubtitledImageDrawable(texture, type + "\n" + BuildingCatalog.getCost(type),
+                new SubtitledImageDrawable(texture, type.toString(),
                         getFont(), ButtonState.SELECTED)
         ));
 
@@ -61,8 +60,7 @@ public class BuildButton extends Button {
     class ButtonClickedListener extends ClickListener {
         @Override
         public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-            EventQueue.getInstance().invoke(new SelectedModeChangedEvent(BuildingMode.BUILDING));
-            EventQueue.getInstance().invoke(new SelectedBuildingTypeChangedEvent(type));
+            EventQueue.getInstance().invoke(new SelectedModeChangedEvent(type));
             return true;
         }
     }
