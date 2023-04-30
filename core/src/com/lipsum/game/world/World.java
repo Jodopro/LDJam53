@@ -7,10 +7,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.lipsum.game.utils.Twople;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.lipsum.game.world.tile.Tile;
 import com.lipsum.game.util.TileType;
+import com.lipsum.game.utils.Twople;
+import com.lipsum.game.world.tile.Tile;
 
 import java.util.HashMap;
 
@@ -98,7 +98,7 @@ public class World extends Actor {
             }
         }
 
-        batch.draw(cameraTexture, camera.position.x - 16 , camera.position.y - 16, 32, 32);
+        // batch.draw(cameraTexture, camera.position.x - 16 , camera.position.y - 16, 32, 32);
     }
 
 //    public Chunk chunkAt(float absoluteX, float absoluteY) {

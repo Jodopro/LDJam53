@@ -11,6 +11,8 @@ public class TextureStore {
     public final static Texture edgeTile = new Texture("edge_tile.png");
     public final static Texture backgroundTile = new Texture("background_tile3.png");
 
+    public final static Texture GRASS_TILE = new Texture("textures/grass.png");
+
     public static final Animation<Texture> CONVEYOR_BELT_STRAIGHT =
             loadMultiFileAnimation("textures/belt/belty_boi%d.png", 8, 0.1f);
 

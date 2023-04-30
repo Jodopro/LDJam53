@@ -35,10 +35,10 @@ public class Tile {
         this.chunk = chunk;
         if (type == TileType.BACKGROUND_TILE){
             if (x == 0 || y == 0 || x == chunk.width - 1 || y == chunk.width - 1) {
-                this.texture = TextureStore.edgeTile;
+                this.texture = TextureStore.GRASS_TILE;
                 return;
             }
-            this.texture = TextureStore.backgroundTile;
+            this.texture = TextureStore.GRASS_TILE;
         }
 
     }
@@ -63,10 +63,10 @@ public class Tile {
         this.type = type;
         if (type == TileType.BACKGROUND_TILE){
             if (x == 0 || y == 0 || x == chunk.width - 1 || y == chunk.width - 1) {
-                this.texture = TextureStore.edgeTile;
+                this.texture = TextureStore.GRASS_TILE;
                 return;
             }
-            this.texture = TextureStore.backgroundTile;
+            this.texture = TextureStore.GRASS_TILE;
         }
     }
 }
