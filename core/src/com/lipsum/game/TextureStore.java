@@ -26,6 +26,8 @@ public class TextureStore {
     public static final Animation<Texture> MERGER =
             loadMultiFileAnimation("textures/merge/mergy_boi%d.png", 8, 0.1f);
 
+    public static final Texture PACKET = new Texture(Gdx.files.internal("textures/packet.png"));
+
 
     /**
      * Loads multiple texture files into one animation
