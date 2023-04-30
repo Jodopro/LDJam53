@@ -5,5 +5,9 @@ public enum BuildingType {
     BELT_RIGHT,
     BELT_LEFT,
     MERGER,
-    SPLITTER
+    SPLITTER,
+
+    CONSUMER,
+
+    PRODUCER
 }

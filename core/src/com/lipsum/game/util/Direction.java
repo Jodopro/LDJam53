@@ -41,4 +41,13 @@ public enum Direction {
             case WEST -> EAST;
         };
     }
+
+    public float toRadians() {
+        return switch (this) {
+            case NORTH -> (float) (Math.PI * 0.5);
+            case SOUTH -> (float) (Math.PI * 1.5);
+            case EAST -> (float) 0.0;
+            case WEST -> (float) Math.PI;
+        };
+    }
 }

@@ -1,9 +1,7 @@
 package com.lipsum.game.entities;
 
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.lipsum.game.actions.CreatePacket;
 import com.lipsum.game.factory.factories.EntityFactory;
+import com.lipsum.game.managers.building.catalog.BuildingType;
 import com.lipsum.game.util.Direction;
 import com.lipsum.game.util.PacketType;
 
@@ -11,7 +9,7 @@ import java.util.ArrayList;
 
 public class Consumer extends Conveyor {
     public Consumer(int x, int y, Direction direction, PacketType type){
-        super(x, y, direction, type);
+        super(x, y, BuildingType.CONSUMER, direction, type);
 //        switch(type){
 //            case RED -> setColor(1,0,0,1);
 //            case BLUE -> setColor(0,0,1,1);

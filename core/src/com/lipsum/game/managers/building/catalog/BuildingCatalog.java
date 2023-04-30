@@ -17,18 +17,6 @@ public class BuildingCatalog {
     }
 
     public static Building produce(Coordinate gridCoordinate, Direction direction, BuildingType buildingType) {
-        int x = gridCoordinate.x();
-        int y = gridCoordinate.y();
-
-        return switch (buildingType) {
-            case BELT_STRAIGHT -> new Conveyor(x ,y, direction);
-            case BELT_LEFT -> new Conveyor(x, y, List.of(direction), List.of(direction.rotateRight()));
-            case BELT_RIGHT -> new Conveyor(x, y, List.of(direction), List.of(direction.rotateLeft()));
-            case MERGER -> new Conveyor(x, y, List.of(direction),
-                    List.of(direction.rotateLeft(), direction.opposite(), direction.rotateRight()));
-            case SPLITTER -> new Conveyor(x, y, List.of(direction, direction.rotateLeft(), direction.rotateRight()),
-                    List.of(direction.opposite()));
-            default -> throw new IllegalArgumentException("No price configured for building type " + buildingType);
-        };
+        return new Conveyor(gridCoordinate.x(), gridCoordinate.y(), buildingType, direction);
     }
 }

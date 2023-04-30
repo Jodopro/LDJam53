@@ -1,8 +1,7 @@
 package com.lipsum.game.entities;
 
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.lipsum.game.actions.CreatePacket;
+import com.lipsum.game.managers.building.catalog.BuildingType;
 import com.lipsum.game.util.Direction;
 import com.lipsum.game.util.PacketType;
 
@@ -12,7 +11,7 @@ import java.util.Random;
 public class Producer extends Conveyor {
     private static final Random rand = new Random();
     public Producer(int x, int y, Direction direction, PacketType type){
-        super(x, y, direction, type);
+        super(x, y, BuildingType.PRODUCER, direction, type);
         setColor(0,1,1,1);
         inputs = new ArrayList<>();
         currentTo = direction;
