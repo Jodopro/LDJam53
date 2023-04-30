@@ -2,15 +2,16 @@ package com.lipsum.game.entities;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.lipsum.game.TextureStore;
 import com.lipsum.game.actions.MoveConveyor;
 import com.lipsum.game.factory.AbstractFactory;
 import com.lipsum.game.factory.factories.ConveyorFactory;
 import com.lipsum.game.factory.factories.EntityFactory;
 import com.lipsum.game.managers.building.catalog.BuildingType;
+import com.lipsum.game.util.BeltColour;
 import com.lipsum.game.util.Direction;
 import com.lipsum.game.util.PacketType;
+import com.lipsum.game.world.WorldCoordinate;
 import com.lipsum.game.world.tile.Tile;
 
 import java.util.ArrayList;
@@ -35,6 +36,16 @@ public class Conveyor extends Building {
         return types;
     }
 
+    public void addPacketType(PacketType packetType) {
+        if (!types.contains(packetType)) {
+            types.add(packetType);
+        }
+    }
+
+    public void removePacketType(PacketType packetType) {
+        types.remove(packetType);
+    }
+
     private class Waiting {
         Direction direction;
         Packet packet;
@@ -57,16 +68,16 @@ public class Conveyor extends Building {
     private BuildingType buildingType;
 
     public Conveyor(int x, int y, BuildingType buildingType, Direction direction) {
-        this(x, y, buildingType, direction, List.of(PacketType.values()));
+        this(x, y, buildingType, direction, new ArrayList<>(List.of(PacketType.values())));
     }
 
     public Conveyor(int x, int y, BuildingType buildingType, Direction direction, PacketType packetType) {
-        this(x, y, buildingType, direction, List.of(packetType));
+        this(x, y, buildingType, direction, new ArrayList<>(List.of(packetType)));
     }
 
     public Conveyor(int x, int y, BuildingType buildingType, Direction direction, List<PacketType> packetType) {
         super(x, y);
-        this.types = packetType;
+        this.types = new ArrayList<>(packetType);
         this.buildingType = buildingType;
         this.direction = direction;
         switch (buildingType) {
@@ -243,40 +254,19 @@ public class Conveyor extends Building {
                 case BELT_LEFT -> TextureStore.CONVEYOR_BELT_LEFT.getKeyFrame(stateTime, true);
                 case MERGER -> TextureStore.MERGER.getKeyFrame(stateTime, true);
                 case SPLITTER -> TextureStore.SPLITTER.getKeyFrame(stateTime, true);
+                case PRODUCER -> TextureStore.PRODUCER;
+                case CONSUMER -> TextureStore.CONSUMER;
                 default -> null;
             };
         }
 
-        batch.end();
-
-        renderer.setProjectionMatrix(batch.getProjectionMatrix());
-        renderer.setTransformMatrix(batch.getTransformMatrix());
-        renderer.translate(getX(), getY(), 0);
-
-        renderer.begin(ShapeRenderer.ShapeType.Filled);
-        if (texture == null) {
-            renderer.setColor(getColor());
-            renderer.rect(0, 0, getWidth(), getHeight());
-        }
-        int i = 0;
-        for (PacketType type : types) {
-            switch (type) {
-                case RED -> renderer.setColor(1, 0, 0, 1);
-                case BLUE -> renderer.setColor(0, 0, 1, 1);
-                case YELLOW -> renderer.setColor(1, 1, 0, 1);
-            }
-            renderer.rect(i * getWidth() / types.size(), 0, getWidth() / types.size(), 5);
-            renderer.rect(getWidth() - 5, i * getHeight() / types.size(), 5, getHeight() / types.size());
-            renderer.rect(getWidth() - (1 + i) * getWidth() / types.size(), getHeight() - 5, getWidth() / types.size(), 5);
-            renderer.rect(0, getHeight() - (1 + i) * getHeight() / types.size(), 5, getHeight() / types.size());
-            i += 1;
-        }
-        renderer.end();
-
-        batch.begin();
         if (texture != null) {
             drawRotated(batch, texture, getX(), getY(),
                     (float) (direction.rotateRight().toRadians() * (180.0f / Math.PI)), getWidth(), getHeight());
+        }
+
+        if (types.size() != 3) {
+            inputs.forEach(dir -> BeltColour.drawBeltColour(batch, dir, types, new WorldCoordinate(getX(), getY())));
         }
     }
 

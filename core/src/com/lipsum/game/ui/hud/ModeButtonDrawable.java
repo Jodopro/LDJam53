@@ -6,6 +6,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.lipsum.game.TextureStore;
 import com.lipsum.game.managers.building.catalog.BuildingMode;
+import com.lipsum.game.util.BeltColour;
+import com.lipsum.game.util.PacketType;
+
+import java.util.Optional;
 
 /**
  * Draws a mode button
@@ -14,6 +18,7 @@ public class ModeButtonDrawable implements Drawable {
 
     private final ButtonState state;
     private final BuildingMode mode;
+    private PacketType packetType;
 
     public ModeButtonDrawable(BuildingMode mode, ButtonState state) {
         this.mode = mode;
@@ -32,6 +37,19 @@ public class ModeButtonDrawable implements Drawable {
                 mtex.getWidth() * textureScale / 2, mtex.getHeight() * textureScale / 2,
                 textureScale * mtex.getWidth(), textureScale * mtex.getHeight(),
                 1.0f, 1.0f, 0.0f, 0, 0, mtex.getWidth(), mtex.getHeight(), false, false);
+
+        if (mode == BuildingMode.COLOUR && packetType != null) {
+            mtex = getColTexture();
+            batch.draw(mtex, x + width/2 - mtex.getWidth() * textureScale / 2 ,
+                    y + height/2 - mtex.getHeight() * textureScale / 2 ,
+                    mtex.getWidth() * textureScale / 2, mtex.getHeight() * textureScale / 2,
+                    textureScale * mtex.getWidth(), textureScale * mtex.getHeight(),
+                    1.0f, 1.0f, 0.0f, 0, 0, mtex.getWidth(), mtex.getHeight(), false, false);
+        }
+    }
+
+    public void setPacketType(PacketType packetType) {
+        this.packetType = packetType;
     }
 
     private TextureRegion getBackgroundTexture() {
@@ -46,8 +64,15 @@ public class ModeButtonDrawable implements Drawable {
         return switch (mode) {
             case ROTATE -> TextureStore.ROTATE;
             case DELETE -> TextureStore.DELETE;
+            case COLOUR -> TextureStore.BELT_COLOUR_BAR;
             default -> null;
         };
+    }
+
+    private Texture getColTexture() {
+        return Optional.ofNullable(packetType)
+                .map(BeltColour::getColourTexture)
+                .orElse(null);
     }
 
     @Override

@@ -26,7 +26,7 @@ public class Chunk {
         for (int rowI = 0; rowI < width; rowI++) {
             for (int colI = 0; colI < width; colI++) {
                 var tile = tiles[rowI][colI];
-                batch.draw(tile.getTexture(), coordinate.x() * size + colI * Tile.WIDTH, coordinate.y() * size + rowI * Tile.HEIGHT);
+                batch.draw(tile.getTexture(), coordinate.x() * size + colI * Tile.WIDTH, coordinate.y() * size + rowI * Tile.HEIGHT, Tile.WIDTH, Tile.HEIGHT);
             }
         }
         font.draw(batch, String.format("x: %d y: %d", coordinate.x(), coordinate.y()), coordinate.x() * size, coordinate.y() * size);

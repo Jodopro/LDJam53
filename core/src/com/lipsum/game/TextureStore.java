@@ -11,6 +11,8 @@ public class TextureStore {
     public final static Texture edgeTile = new Texture("edge_tile.png");
     public final static Texture backgroundTile = new Texture("background_tile3.png");
 
+    public final static Texture GRASS_TILE = new Texture("textures/grass.png");
+
     public static final Animation<Texture> CONVEYOR_BELT_STRAIGHT =
             loadMultiFileAnimation("textures/belt/belty_boi%d.png", 8, 0.1f);
 
@@ -26,11 +28,20 @@ public class TextureStore {
     public static final Animation<Texture> MERGER =
             loadMultiFileAnimation("textures/merge/mergy_boi%d.png", 8, 0.1f);
 
+    public static final Texture CONSUMER = new Texture(Gdx.files.internal("textures/consumer.png"));
+    public static final Texture PRODUCER = new Texture(Gdx.files.internal("textures/producer.png"));
+
+
     public static final Texture PACKET = new Texture(Gdx.files.internal("textures/packet.png"));
 
     public static final Texture BUILD_BUTTON = new Texture(Gdx.files.internal("textures/build_button.png"));
     public static final Texture ROTATE = new Texture(Gdx.files.internal("textures/rotate.png"));
     public static final Texture DELETE = new Texture(Gdx.files.internal("textures/delete.png"));
+
+    public static final Texture BELT_COLOUR_BAR = new Texture(Gdx.files.internal("textures/belt_light_bar.png"));
+    public static final Texture BELT_COLOUR_RED = new Texture(Gdx.files.internal("textures/belt_light_red.png"));
+    public static final Texture BELT_COLOUR_YELLOW = new Texture(Gdx.files.internal("textures/belt_light_yellow.png"));
+    public static final Texture BELT_COLOUR_BLUE = new Texture(Gdx.files.internal("textures/belt_light_blue.png"));
 
 
 

@@ -1,7 +1,6 @@
 package com.lipsum.game.ui.hud;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -10,12 +9,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.lipsum.game.managers.building.catalog.BuildingCatalog;
-import com.lipsum.game.managers.building.catalog.BuildingMode;
 import com.lipsum.game.event.EventConsumer;
 import com.lipsum.game.event.EventQueue;
 import com.lipsum.game.event.EventType;
 import com.lipsum.game.event.events.TileDirectionChangedEvent;
+import com.lipsum.game.managers.building.catalog.BuildingMode;
 import com.lipsum.game.managers.building.catalog.BuildingType;
 import com.lipsum.game.util.Direction;
 
@@ -37,6 +35,7 @@ public class BuildMenu extends Table {
         buttonGroup.add(new BuildButton(this, BuildingType.BELT_RIGHT));
         buttonGroup.add(new BuildButton(this, BuildingType.SPLITTER));
         buttonGroup.add(new BuildButton(this, BuildingType.MERGER));
+        buttonGroup.add(new ModeButton(defaultTexture, BuildingMode.COLOUR));
         buttonGroup.add(new ModeButton(defaultTexture, BuildingMode.ROTATE));
         buttonGroup.add(new ModeButton(defaultTexture, BuildingMode.DELETE));
 
