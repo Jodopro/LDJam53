@@ -56,8 +56,6 @@ public class Conveyor extends Building {
         this.outputs = outputs;
     }
 
-    private ShapeRenderer renderer = new ShapeRenderer();
-
     public void setPacketLocation(float progress){
         float x = getX() + Tile.WIDTH/10;
         float y = getY() + Tile.HEIGHT/10;
@@ -83,7 +81,7 @@ public class Conveyor extends Building {
         }
     }
 
-    public void passToNext(){
+    public boolean passToNext(){
         Building b = null;
         Direction d = null;
         if (currentTo == Direction.NORTH && northBuilding != null){
@@ -103,16 +101,10 @@ public class Conveyor extends Building {
             Conveyor c = (Conveyor) b;
             if (c.allowsInputFrom().contains(this)) {
                 c.addPacket(packet, this, d);
-            } else {
-                //TODO: add listener for updates
+                return true;
             }
-        } else {
-            //TODO: add listener for updates
         }
-//        if (packet == null){
-//            getNextPacket();
-//        }
-
+        return false;
     }
 
     public void addPacket(Packet p, Conveyor from, Direction d){
@@ -131,7 +123,7 @@ public class Conveyor extends Building {
                 currentFrom = next.direction;
                 Random rand = new Random();
                 currentTo = outputs.get(rand.nextInt(outputs.size()));
-                MoveConveyor moveConveyor = new MoveConveyor(this, 1);
+                MoveConveyor moveConveyor = new MoveConveyor(this, 2);
                 this.addAction(moveConveyor);
                 next.previousConveyor.packet = null;
                 next.previousConveyor.getNextPacket();
@@ -139,24 +131,6 @@ public class Conveyor extends Building {
         }
     }
 
-    public void draw (Batch batch, float parentAlpha) {
-        batch.end();
-
-        renderer.setProjectionMatrix(batch.getProjectionMatrix());
-        renderer.setTransformMatrix(batch.getTransformMatrix());
-        renderer.translate(getX(), getY(), 0);
-
-        renderer.begin(ShapeRenderer.ShapeType.Filled);
-        renderer.setColor(getColor());
-        renderer.rect(0, 0, getWidth(), getHeight());
-        renderer.end();
-
-        batch.begin();
-    }
-
-    public boolean hasPacket(){
-        return packet != null;
-    }
 
     public List<Building> allowsInputFrom(){
         List<Building> l = new ArrayList<>();

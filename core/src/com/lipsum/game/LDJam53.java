@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.lipsum.game.entities.Consumer;
 import com.lipsum.game.entities.Producer;
 import com.lipsum.game.event.EventQueue;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -50,35 +51,30 @@ public class LDJam53 extends ApplicationAdapter {
 	@Override
 	public void create () {
 		var camera = new OrthographicCamera(30f, 30f);
+
 		inputMultiplexer = new InputMultiplexer();
 		hudUI = new HudUI();
 
 		hudUI.create(inputMultiplexer);
 
 		stage = new Stage(new ScreenViewport(camera));
-		world = new World(10, stage);
-
+		world = World.init(10, stage);
 		stage.addActor(world);
 		stage.addActor(machineGroup);
 		stage.addActor(packetGroup);
 
-		Conveyor c1 = new Conveyor(2, 1, Direction.NORTH);
-		new Conveyor(2, 2, Direction.NORTH);
-		new Conveyor(2, 3, List.of(Direction.SOUTH), List.of(Direction.WEST, Direction.EAST));
-		new Conveyor(1, 3, Direction.WEST);
-		new Conveyor(3, 3, Direction.EAST);
-		new Conveyor(4, 3, List.of(Direction.WEST), List.of(Direction.NORTH));
-		new Conveyor(0, 3, List.of(Direction.EAST), List.of(Direction.NORTH));
-		new Conveyor(4, 4, Direction.NORTH);
-		new Conveyor(0, 4, Direction.NORTH);
-		new Producer(2, 0, Direction.NORTH);
-
-		Packet p = new Packet();
-		c1.setPacket(p);
-		c1.setCurrentFrom(Direction.SOUTH);
-		c1.setCurrentTo(Direction.NORTH);
-		MoveConveyor moveConveyor = new MoveConveyor(c1, 1);
-		c1.addAction(moveConveyor);
+		Conveyor c1 = new Conveyor(3, 2, Direction.NORTH);
+		new Conveyor(3, 3, Direction.NORTH);
+		new Conveyor(3, 4, List.of(Direction.SOUTH), List.of(Direction.WEST, Direction.EAST));
+		new Conveyor(2, 4, Direction.WEST);
+		new Conveyor(4, 4, Direction.EAST);
+		new Conveyor(5, 4, List.of(Direction.WEST), List.of(Direction.NORTH));
+		new Conveyor(1, 4, List.of(Direction.EAST), List.of(Direction.NORTH));
+		new Conveyor(5, 5, Direction.NORTH);
+		new Conveyor(1, 5, Direction.NORTH);
+		new Producer(3, 1, Direction.NORTH);
+		new Consumer(1,6, Direction.NORTH);
+		new Consumer(5,6, Direction.NORTH);
 
 		inputMultiplexer.addProcessor(stage);
 
