@@ -9,9 +9,12 @@ public class TileClickedEvent implements Event {
     private final Tile tile;
     private final WorldCoordinate worldCoordinate;
 
-    public TileClickedEvent(Tile tile, WorldCoordinate worldCoordinate) {
+    private final int button;
+
+    public TileClickedEvent(Tile tile, WorldCoordinate worldCoordinate, int button) {
         this.tile = tile;
         this.worldCoordinate = worldCoordinate;
+        this.button = button;
     }
 
     @Override
@@ -25,5 +28,9 @@ public class TileClickedEvent implements Event {
 
     public WorldCoordinate getWorldCoordinate() {
         return worldCoordinate;
+    }
+
+    public int getButton() {
+        return button;
     }
 }

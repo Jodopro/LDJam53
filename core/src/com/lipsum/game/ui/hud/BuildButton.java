@@ -1,12 +1,12 @@
 package com.lipsum.game.ui.hud;
 
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.lipsum.game.event.EventQueue;
 import com.lipsum.game.event.events.SelectedBuildingTypeChangedEvent;
 import com.lipsum.game.event.events.SelectedModeChangedEvent;
-import com.lipsum.game.managers.building.catalog.BuildingCatalog;
 import com.lipsum.game.managers.building.catalog.BuildingMode;
 import com.lipsum.game.managers.building.catalog.BuildingType;
 
@@ -51,9 +51,12 @@ public class BuildButton extends Button {
     class ButtonClickedListener extends ClickListener {
         @Override
         public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-            EventQueue.getInstance().invoke(new SelectedModeChangedEvent(BuildingMode.BUILDING));
-            EventQueue.getInstance().invoke(new SelectedBuildingTypeChangedEvent(type));
-            return true;
+            if (button == Input.Buttons.LEFT) {
+                EventQueue.getInstance().invoke(new SelectedModeChangedEvent(BuildingMode.BUILDING, null));
+                EventQueue.getInstance().invoke(new SelectedBuildingTypeChangedEvent(type));
+                return true;
+            }
+            return false;
         }
     }
 }

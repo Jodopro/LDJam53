@@ -35,6 +35,16 @@ public class Conveyor extends Building {
         return types;
     }
 
+    public void addPacketType(PacketType packetType) {
+        if (!types.contains(packetType)) {
+            types.add(packetType);
+        }
+    }
+
+    public void removePacketType(PacketType packetType) {
+        types.remove(packetType);
+    }
+
     private class Waiting {
         Direction direction;
         Packet packet;
@@ -57,16 +67,16 @@ public class Conveyor extends Building {
     private BuildingType buildingType;
 
     public Conveyor(int x, int y, BuildingType buildingType, Direction direction) {
-        this(x, y, buildingType, direction, List.of(PacketType.values()));
+        this(x, y, buildingType, direction, new ArrayList<>(List.of(PacketType.values())));
     }
 
     public Conveyor(int x, int y, BuildingType buildingType, Direction direction, PacketType packetType) {
-        this(x, y, buildingType, direction, List.of(packetType));
+        this(x, y, buildingType, direction, new ArrayList<>(List.of(packetType)));
     }
 
     public Conveyor(int x, int y, BuildingType buildingType, Direction direction, List<PacketType> packetType) {
         super(x, y);
-        this.types = packetType;
+        this.types = new ArrayList<>(packetType);
         this.buildingType = buildingType;
         this.direction = direction;
         switch (buildingType) {

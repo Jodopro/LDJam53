@@ -1,5 +1,6 @@
 package com.lipsum.game.managers.building;
 
+import com.badlogic.gdx.Input;
 import com.lipsum.game.entities.Conveyor;
 import com.lipsum.game.event.EventConsumer;
 import com.lipsum.game.event.EventQueue;
@@ -9,6 +10,7 @@ import com.lipsum.game.managers.building.catalog.BuildingCatalog;
 import com.lipsum.game.managers.building.catalog.BuildingMode;
 import com.lipsum.game.managers.building.catalog.BuildingType;
 import com.lipsum.game.util.Direction;
+import com.lipsum.game.util.PacketType;
 import com.lipsum.game.util.TileType;
 import com.lipsum.game.world.Coordinate;
 import com.lipsum.game.world.World;
@@ -22,6 +24,7 @@ public class BuildingManager {
     private BuildingType selectedType = BuildingType.BELT_STRAIGHT;
     private static BuildingManager instance;
     private BuildingMode buildingMode = BuildingMode.BUILDING;
+    private PacketType packetType;
 
     public static BuildingManager getInstance() {
         if (instance == null) {
@@ -75,6 +78,18 @@ public class BuildingManager {
             }
         } else if (buildingMode == BuildingMode.DELETE) {
 
+        } else if (buildingMode == BuildingMode.COLOUR && packetType != null) {
+            Tile t = World.getInstance().tileAt(new Coordinate(gridX, gridY));
+            if (t.getBuilding() instanceof Conveyor c) {
+                if (tileClickedEvent.getButton() == Input.Buttons.LEFT) {
+                    c.addPacketType(packetType);
+                    EventQueue.getInstance().invoke(new BuildingUpdateEvent(gridX, gridY));
+                } else {
+                    c.removePacketType(packetType);
+                    EventQueue.getInstance().invoke(new BuildingUpdateEvent(gridX, gridY));
+                }
+            }
+
         }
     }
 
@@ -94,6 +109,7 @@ public class BuildingManager {
 
     public void onSelectedModeChangedEventEvent(SelectedModeChangedEvent event) {
         buildingMode = event.buildingMode();
+        packetType = event.packetType();
     }
 
     public void onBuildingUpdateEvent(BuildingUpdateEvent event){
