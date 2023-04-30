@@ -1,40 +1,45 @@
 package com.lipsum.game.entities;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.lipsum.game.LDJam53;
+import com.lipsum.game.TextureStore;
 import com.lipsum.game.factory.factories.ConveyorFactory;
 import com.lipsum.game.factory.factories.PacketFactory;
 import com.lipsum.game.util.PacketType;
+import com.lipsum.game.world.tile.Tile;
+
+import java.util.EnumMap;
 
 public class Packet extends Entity {
+    private static final EnumMap<PacketType, TextureRegion> textureRegions;
+    static {
+        // This code assumes that the texture for each packet is square (which it currently is)
+        // That way, we can use the height as the width of a packet in the map
+        textureRegions = new EnumMap<>(PacketType.class);
+        textureRegions.put(PacketType.RED, new TextureRegion(TextureStore.PACKET,
+                TextureStore.PACKET.getHeight()*2, 0, TextureStore.PACKET.getHeight(), TextureStore.PACKET.getHeight()));
+        textureRegions.put(PacketType.BLUE, new TextureRegion(TextureStore.PACKET,
+                0, 0, TextureStore.PACKET.getHeight(), TextureStore.PACKET.getHeight()));
+        textureRegions.put(PacketType.YELLOW, new TextureRegion(TextureStore.PACKET,
+                TextureStore.PACKET.getHeight(), 0, TextureStore.PACKET.getHeight(), TextureStore.PACKET.getHeight()));
+    }
     private PacketType type;
+
+
 
     public Packet(PacketType type){
         super();
+        setWidth(textureRegions.get(PacketType.RED).getRegionWidth()* RENDER_SCALE);
+        setHeight(textureRegions.get(PacketType.RED).getRegionHeight()* RENDER_SCALE);
         this.type = type;
-        switch(type){
-            case RED -> setColor(1,0,0,1);
-            case BLUE -> setColor(0,0,1,1);
-            case YELLOW -> setColor(1,1,0,1);
-        }
         LDJam53.packetGroup.addActor(this);
     }
 
-    private ShapeRenderer renderer = new ShapeRenderer();
     public void draw (Batch batch, float parentAlpha) {
-        batch.end();
+        batch.draw(textureRegions.get(type), getX() - getWidth()/2, getY() - getHeight()/2,  getWidth(), getHeight());
 
-        renderer.setProjectionMatrix(batch.getProjectionMatrix());
-        renderer.setTransformMatrix(batch.getTransformMatrix());
-        renderer.translate(getX(), getY(), 0);
-
-        renderer.begin(ShapeRenderer.ShapeType.Filled);
-        renderer.setColor(getColor());
-        renderer.rect(0, 0, getWidth(), getHeight());
-        renderer.end();
-
-        batch.begin();
     }
 
     @Override

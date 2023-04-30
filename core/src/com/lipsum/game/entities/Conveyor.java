@@ -82,8 +82,8 @@ public class Conveyor extends Building {
     }
 
     public void setPacketLocation(float progress) {
-        float x = getX() + Tile.WIDTH / 10;
-        float y = getY() + Tile.HEIGHT / 10;
+        float x = getX() + Tile.WIDTH/2;
+        float y = getY()+ Tile.HEIGHT/2;
         if (progress < 0.5f) {
             switch (currentFrom) {
                 case SOUTH -> y += Tile.HEIGHT * progress - Tile.HEIGHT / 2;
@@ -102,7 +102,7 @@ public class Conveyor extends Building {
         if (packet == null) {
             throw new IllegalStateException("Conveyor has not packet");
         } else {
-            packet.setBounds(x, y, Tile.WIDTH * 8 / 10, Tile.HEIGHT * 8 / 10);
+            packet.setPosition(x, y);
         }
     }
 
