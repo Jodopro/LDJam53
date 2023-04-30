@@ -25,6 +25,7 @@ import com.lipsum.game.states.PlayerState;
 import com.lipsum.game.ui.hud.HudUI;
 import com.lipsum.game.factory.factories.PacketFactory;
 import com.lipsum.game.util.Direction;
+import com.lipsum.game.util.PacketType;
 import com.lipsum.game.world.World;
 
 import java.util.List;
@@ -63,7 +64,9 @@ public class LDJam53 extends ApplicationAdapter {
 		stage.addActor(machineGroup);
 		stage.addActor(packetGroup);
 
-		Conveyor c1 = new Conveyor(3, 2, Direction.NORTH);
+		new Conveyor(3, 2, List.of(Direction.SOUTH, Direction.WEST, Direction.EAST), List.of(Direction.NORTH));
+		new Conveyor(2, 2, List.of(Direction.SOUTH), List.of(Direction.EAST));
+		new Conveyor(4, 2, List.of(Direction.SOUTH), List.of(Direction.WEST));
 		new Conveyor(3, 3, Direction.NORTH);
 		new Conveyor(3, 4, List.of(Direction.SOUTH), List.of(Direction.WEST, Direction.EAST));
 		new Conveyor(2, 4, Direction.WEST);
@@ -72,9 +75,12 @@ public class LDJam53 extends ApplicationAdapter {
 		new Conveyor(1, 4, List.of(Direction.EAST), List.of(Direction.NORTH));
 		new Conveyor(5, 5, Direction.NORTH);
 		new Conveyor(1, 5, Direction.NORTH);
-		new Producer(3, 1, Direction.NORTH);
-		new Consumer(1,6, Direction.NORTH);
-		new Consumer(5,6, Direction.NORTH);
+		new Producer(3, 1, Direction.NORTH, PacketType.BLUE);
+		new Producer(2, 1, Direction.NORTH, PacketType.RED);
+		new Producer(4, 1, Direction.NORTH, PacketType.YELLOW);
+		new Consumer(1,6, Direction.NORTH, PacketType.YELLOW);
+		new Consumer(5,6, Direction.NORTH, PacketType.BLUE);
+		new Consumer(3,6, Direction.NORTH, PacketType.RED);
 
 		inputMultiplexer.addProcessor(stage);
 

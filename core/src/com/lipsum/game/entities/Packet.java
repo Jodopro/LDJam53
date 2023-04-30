@@ -5,12 +5,19 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.lipsum.game.LDJam53;
 import com.lipsum.game.factory.factories.ConveyorFactory;
 import com.lipsum.game.factory.factories.PacketFactory;
+import com.lipsum.game.util.PacketType;
 
 public class Packet extends Entity {
+    private PacketType type;
 
-    public Packet(){
+    public Packet(PacketType type){
         super();
-        setColor(0,0,1,1);
+        this.type = type;
+        switch(type){
+            case RED -> setColor(1,0,0,1);
+            case BLUE -> setColor(0,0,1,1);
+            case YELLOW -> setColor(1,1,0,1);
+        }
         LDJam53.packetGroup.addActor(this);
     }
 
@@ -33,5 +40,9 @@ public class Packet extends Entity {
     @Override
     public void onDispose() {
         remove();
+    }
+
+    public PacketType getType() {
+        return type;
     }
 }

@@ -7,14 +7,12 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.lipsum.game.factory.factories.BuildingFactory;
 import com.lipsum.game.utils.Twople;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.lipsum.game.world.tile.Tile;
-import com.lipsum.game.world.tile.TileType;
+import com.lipsum.game.util.TileType;
 
 import java.util.HashMap;
-import java.util.function.BiFunction;
 
 public class World extends Actor {
     private static World instance = null;
