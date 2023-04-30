@@ -69,6 +69,7 @@ public class BuildingManager {
                 System.out.println("Tile already occupied :(");
             } else {
                 BuildingCatalog.produce(new Coordinate(gridX, gridY), direction, selectedType);
+                EventQueue.getInstance().invoke(new BuildingUpdateEvent(gridX, gridY));
             }
         } else if (buildingMode == BuildingMode.ROTATE) {
             Tile t = World.getInstance().tileAt(new Coordinate(gridX, gridY));
