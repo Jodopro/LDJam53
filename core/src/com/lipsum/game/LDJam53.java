@@ -62,13 +62,13 @@ public class LDJam53 extends ApplicationAdapter {
 		new Conveyor(4, 2, BuildingType.BELT_LEFT, Direction.WEST);
 		new Conveyor(3, 3, BuildingType.BELT_STRAIGHT, Direction.NORTH);
 		new Conveyor(3, 4, BuildingType.SPLITTER, Direction.NORTH);
-		new Conveyor(2, 4, BuildingType.BELT_STRAIGHT, Direction.WEST);
-		new Conveyor(4, 4, BuildingType.BELT_STRAIGHT, Direction.EAST);
+		new Conveyor(2, 4, BuildingType.BELT_STRAIGHT, Direction.WEST, PacketType.YELLOW);
+		new Conveyor(4, 4, BuildingType.BELT_STRAIGHT, Direction.EAST, PacketType.BLUE);
 		new Conveyor(5, 4, BuildingType.BELT_LEFT, Direction.NORTH);
 		new Conveyor(1, 4, BuildingType.BELT_RIGHT, Direction.NORTH);
 		new Conveyor(5, 5, BuildingType.BELT_STRAIGHT, Direction.NORTH);
 		new Conveyor(1, 5, BuildingType.BELT_STRAIGHT, Direction.NORTH);
-		new Conveyor(3, 5, BuildingType.BELT_STRAIGHT, Direction.NORTH);
+		new Conveyor(3, 5, BuildingType.BELT_STRAIGHT, Direction.NORTH, PacketType.RED);
 		new Producer(3, 1, Direction.NORTH, PacketType.BLUE);
 		new Producer(2, 1, Direction.NORTH, PacketType.RED);
 		new Producer(4, 1, Direction.NORTH, PacketType.YELLOW);

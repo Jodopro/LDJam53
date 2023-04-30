@@ -28,6 +28,11 @@ public class Conveyor extends Building {
     private Direction direction = Direction.EAST;
 
     protected List<PacketType> types;
+    protected MoveConveyor currentAction;
+
+    public List<PacketType> getPacketTypes() {
+        return types;
+    }
 
     private class Waiting {
         Direction direction;
@@ -84,7 +89,7 @@ public class Conveyor extends Building {
     public void setPacketLocation(float progress) {
         float x = getX() + Tile.WIDTH/2;
         float y = getY()+ Tile.HEIGHT/2;
-        if (progress < 0.5f) {
+        if (progress <= 0.5f) {
             switch (currentFrom) {
                 case SOUTH -> y += Tile.HEIGHT * progress - Tile.HEIGHT / 2;
                 case WEST -> x += Tile.WIDTH * progress - Tile.WIDTH / 2;
@@ -146,11 +151,54 @@ public class Conveyor extends Building {
             if (next != null) {
                 packet = next.packet;
                 currentFrom = next.direction;
-                currentTo = outputs.get(rand.nextInt(outputs.size()));
-                MoveConveyor moveConveyor = new MoveConveyor(this, 2);
+                List<Direction> validOutputs = getValidOutputDirections(packet.getType());
+                MoveConveyor moveConveyor;
+                if (validOutputs.size() >= 1){
+                    currentTo = validOutputs.get(rand.nextInt(validOutputs.size()));
+                    moveConveyor = new MoveConveyor(this, 2, 1);
+                } else {
+                    moveConveyor = new MoveConveyor(this, 2, 0.5f);
+                }
                 this.addAction(moveConveyor);
+                currentAction = moveConveyor;
                 next.previousConveyor.packet = null;
                 next.previousConveyor.getNextPacket();
+            }
+        }
+    }
+
+    @Override
+    public void onUpdateNeighbour(Direction direction){
+        if (packet != null && (currentTo == direction || currentTo == null)){
+            List<Direction> validOutputs = getValidOutputDirections(packet.getType());
+            System.out.println(validOutputs.contains(currentTo));
+            if (!validOutputs.contains(currentTo)){
+                currentAction.capProgress(0.5f);
+                if (validOutputs.size() >= 1){
+                    currentTo = validOutputs.get(rand.nextInt(validOutputs.size()));
+                    currentAction.setMaxProgress(1);
+                } else {
+                    currentTo = null;
+                    currentAction.setMaxProgress(0.5f);
+                }
+            }
+        }
+    }
+
+    protected List<Direction> getValidOutputDirections(PacketType type){
+        List<Direction> list = new ArrayList<>();
+        addDirectionToListIfValid(list, Direction.NORTH, northBuilding, type);
+        addDirectionToListIfValid(list, Direction.EAST, eastBuilding, type);
+        addDirectionToListIfValid(list, Direction.SOUTH, southBuilding, type);
+        addDirectionToListIfValid(list, Direction.WEST, westBuilding, type);
+        return list;
+    }
+
+    private void addDirectionToListIfValid(List<Direction> list, Direction direction, Building building, PacketType packetType){
+        if (building != null && building instanceof Conveyor){
+            Conveyor c = (Conveyor) building;
+            if (c.allowsInputFrom().contains(this) && c.getPacketTypes().contains(packetType)){
+                list.add(direction);
             }
         }
     }
@@ -214,5 +262,20 @@ public class Conveyor extends Building {
             drawRotated(batch, texture, getX(), getY(),
                     (float) (direction.rotateRight().toRadians() * (180.0f / Math.PI)), getWidth(), getHeight());
         }
+    }
+
+    @Override
+    public void rotate(){
+        direction = direction.rotateRight();
+        List<Direction> newInputs = new ArrayList<>();
+        inputs.forEach(x -> newInputs.add(x.rotateRight()));
+        List<Direction> newOutputs = new ArrayList<>();
+        outputs.forEach(x -> newOutputs.add(x.rotateRight()));
+        inputs = newInputs;
+        outputs = newOutputs;
+    }
+
+    public Direction getCurrentTo() {
+        return currentTo;
     }
 }

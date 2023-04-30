@@ -1,5 +1,6 @@
 package com.lipsum.game.ui.hud;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -12,34 +13,42 @@ import com.lipsum.game.managers.building.catalog.BuildingType;
 
 import static com.lipsum.game.ui.hud.BuildMenu.getFont;
 
-public class BuildButton extends Button {
+public class ModeButton extends Button {
 
-    private final BuildingType type;
+    private final Texture texture;
+    private final BuildingMode type;
     private final ButtonClickedListener listener;
 
-    public BuildButton(BuildMenu buildMenu, BuildingType type) {
+    public ModeButton(Texture texture, BuildingMode type) {
         super(new ButtonStyle(
-                new SubtitledImageDrawable(buildMenu, type,
+                new SubtitledImageDrawable(texture, type.toString(),
                         getFont(), ButtonState.DEFAULT),
-                new SubtitledImageDrawable(buildMenu, type,
+                new SubtitledImageDrawable(texture, type.toString(),
                         getFont(), ButtonState.PRESSED),
-                new SubtitledImageDrawable(buildMenu, type,
+                new SubtitledImageDrawable(texture, type.toString(),
                         getFont(), ButtonState.SELECTED)
         ));
 
         this.type = type;
+        this.texture = texture;
         listener = new ButtonClickedListener();
         addListener(listener);
     }
 
     @Override
     public float getPrefWidth() {
-        return BuildButtonHelper.SIZE * BuildButtonHelper.SCALE;
+        if (texture == null) {
+            return 0;
+        }
+        return texture.getWidth() * 6;
     }
 
     @Override
     public float getPrefHeight() {
-        return BuildButtonHelper.SIZE * BuildButtonHelper.SCALE;
+        if (texture == null) {
+            return 0;
+        }
+        return texture.getHeight() * 6 + getFont().getLineHeight() * 2;
     }
 
     @Override
@@ -51,8 +60,7 @@ public class BuildButton extends Button {
     class ButtonClickedListener extends ClickListener {
         @Override
         public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-            EventQueue.getInstance().invoke(new SelectedModeChangedEvent(BuildingMode.BUILDING));
-            EventQueue.getInstance().invoke(new SelectedBuildingTypeChangedEvent(type));
+            EventQueue.getInstance().invoke(new SelectedModeChangedEvent(type));
             return true;
         }
     }
