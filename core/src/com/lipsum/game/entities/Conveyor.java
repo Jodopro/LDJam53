@@ -2,14 +2,15 @@ package com.lipsum.game.entities;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.lipsum.game.TextureStore;
 import com.lipsum.game.actions.MoveConveyor;
 import com.lipsum.game.factory.AbstractFactory;
 import com.lipsum.game.factory.factories.ConveyorFactory;
 import com.lipsum.game.managers.building.catalog.BuildingType;
+import com.lipsum.game.util.BeltColour;
 import com.lipsum.game.util.Direction;
 import com.lipsum.game.util.PacketType;
+import com.lipsum.game.world.WorldCoordinate;
 import com.lipsum.game.world.tile.Tile;
 
 import java.util.ArrayList;
@@ -231,36 +232,13 @@ public class Conveyor extends Building {
             };
         }
 
-        batch.end();
-
-        renderer.setProjectionMatrix(batch.getProjectionMatrix());
-        renderer.setTransformMatrix(batch.getTransformMatrix());
-        renderer.translate(getX(), getY(), 0);
-
-        renderer.begin(ShapeRenderer.ShapeType.Filled);
-        if (texture == null) {
-            renderer.setColor(getColor());
-            renderer.rect(0, 0, getWidth(), getHeight());
-        }
-        int i = 0;
-        for (PacketType type : types) {
-            switch (type) {
-                case RED -> renderer.setColor(1, 0, 0, 1);
-                case BLUE -> renderer.setColor(0, 0, 1, 1);
-                case YELLOW -> renderer.setColor(1, 1, 0, 1);
-            }
-            renderer.rect(i * getWidth() / types.size(), 0, getWidth() / types.size(), 5);
-            renderer.rect(getWidth() - 5, i * getHeight() / types.size(), 5, getHeight() / types.size());
-            renderer.rect(getWidth() - (1 + i) * getWidth() / types.size(), getHeight() - 5, getWidth() / types.size(), 5);
-            renderer.rect(0, getHeight() - (1 + i) * getHeight() / types.size(), 5, getHeight() / types.size());
-            i += 1;
-        }
-        renderer.end();
-
-        batch.begin();
         if (texture != null) {
             drawRotated(batch, texture, getX(), getY(),
                     (float) (direction.rotateRight().toRadians() * (180.0f / Math.PI)), getWidth(), getHeight());
+        }
+
+        if (types.size() != 3) {
+            inputs.forEach(dir -> BeltColour.drawBeltColour(batch, dir, types, new WorldCoordinate(getX(), getY())));
         }
     }
 

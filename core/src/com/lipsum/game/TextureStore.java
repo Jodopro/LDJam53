@@ -32,6 +32,11 @@ public class TextureStore {
     public static final Texture ROTATE = new Texture(Gdx.files.internal("textures/rotate.png"));
     public static final Texture DELETE = new Texture(Gdx.files.internal("textures/delete.png"));
 
+    public static final Texture BELT_COLOUR_BAR = new Texture(Gdx.files.internal("textures/belt_light_bar.png"));
+    public static final Texture BELT_COLOUR_RED = new Texture(Gdx.files.internal("textures/belt_light_red.png"));
+    public static final Texture BELT_COLOUR_YELLOW = new Texture(Gdx.files.internal("textures/belt_light_yellow.png"));
+    public static final Texture BELT_COLOUR_BLUE = new Texture(Gdx.files.internal("textures/belt_light_blue.png"));
+
 
 
 
