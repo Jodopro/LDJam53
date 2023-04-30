@@ -44,6 +44,7 @@ public class Packet extends Entity {
 
     @Override
     public void onDispose() {
+        System.out.println("dispose Packet");
         remove();
     }
 
