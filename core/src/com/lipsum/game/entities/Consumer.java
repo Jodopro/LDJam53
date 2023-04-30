@@ -10,11 +10,6 @@ import java.util.ArrayList;
 public class Consumer extends Conveyor {
     public Consumer(int x, int y, Direction direction, PacketType type){
         super(x, y, BuildingType.CONSUMER, direction, type);
-//        switch(type){
-//            case RED -> setColor(1,0,0,1);
-//            case BLUE -> setColor(0,0,1,1);
-//            case YELLOW -> setColor(1,1,0,1);
-//        }
         setColor(1,0,1,1);
         //TODO: might be confusing: als direction = north, dan is de input kant dus south
     }
@@ -30,4 +25,11 @@ public class Consumer extends Conveyor {
         getNextPacket();
         return true;
     }
+
+    @Override
+    public void getNextPacket(){
+        super.getNextPacket();
+        this.currentAction.setMaxProgress(1);
+    }
+
 }

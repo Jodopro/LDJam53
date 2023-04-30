@@ -15,6 +15,7 @@ public class Producer extends Conveyor {
         setColor(0,1,1,1);
         inputs = new ArrayList<>();
         currentTo = direction;
+        currentFrom = direction.opposite();
         getNextPacket();
     }
 
