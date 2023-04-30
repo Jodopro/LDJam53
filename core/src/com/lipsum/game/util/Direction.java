@@ -50,4 +50,13 @@ public enum Direction {
             case WEST -> (float) Math.PI;
         };
     }
+
+    public float toDegrees() {
+        return switch (this) {
+            case NORTH -> (float) 90;
+            case SOUTH -> (float) 270;
+            case EAST -> (float) 0.0;
+            case WEST -> (float) 180;
+        };
+    }
 }

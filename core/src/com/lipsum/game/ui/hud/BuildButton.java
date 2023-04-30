@@ -1,53 +1,42 @@
 package com.lipsum.game.ui.hud;
 
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.lipsum.game.event.EventQueue;
 import com.lipsum.game.event.events.SelectedBuildingTypeChangedEvent;
-import com.lipsum.game.managers.building.catalog.BuildingCatalog;
 import com.lipsum.game.managers.building.catalog.BuildingType;
 
 import static com.lipsum.game.ui.hud.BuildMenu.getFont;
 
 public class BuildButton extends Button {
 
-    private final Texture texture;
     private final BuildingType type;
     private final ButtonClickedListener listener;
 
-    public BuildButton(Texture texture, BuildingType type) {
+    public BuildButton(BuildMenu buildMenu, BuildingType type) {
         super(new ButtonStyle(
-                new SubtitledImageDrawable(texture, type + "\n" + BuildingCatalog.getCost(type),
+                new SubtitledImageDrawable(buildMenu, type,
                         getFont(), ButtonState.DEFAULT),
-                new SubtitledImageDrawable(texture, type + "\n" + BuildingCatalog.getCost(type),
+                new SubtitledImageDrawable(buildMenu, type,
                         getFont(), ButtonState.PRESSED),
-                new SubtitledImageDrawable(texture, type + "\n" + BuildingCatalog.getCost(type),
+                new SubtitledImageDrawable(buildMenu, type,
                         getFont(), ButtonState.SELECTED)
         ));
 
         this.type = type;
-        this.texture = texture;
         listener = new ButtonClickedListener();
         addListener(listener);
     }
 
     @Override
     public float getPrefWidth() {
-        if (texture == null) {
-            return 0;
-        }
-        return texture.getWidth() * 6;
+        return BuildButtonHelper.SIZE * BuildButtonHelper.SCALE;
     }
 
     @Override
     public float getPrefHeight() {
-        if (texture == null) {
-            return 0;
-        }
-        return texture.getHeight() * 6 + getFont().getLineHeight() * 2;
+        return BuildButtonHelper.SIZE * BuildButtonHelper.SCALE;
     }
 
     @Override

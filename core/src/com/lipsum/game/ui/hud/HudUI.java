@@ -13,12 +13,14 @@ import com.lipsum.game.ui.BaseUI;
 public class HudUI extends BaseUI {
     private PlayerState playerState;
     private BitmapFont bitmapFont;
+    private BuildMenu buildMenu;
 
     @Override
     public void create(InputMultiplexer inputMultiplexer) {
         super.create(inputMultiplexer);
         table.align(Align.bottomLeft);
-        table.add(new BuildMenu());
+        buildMenu = new BuildMenu();
+        table.add(buildMenu);
         stage.addActor(table);
         playerState = PlayerState.getInstance();
         bitmapFont = new BitmapFont();
@@ -43,6 +45,7 @@ public class HudUI extends BaseUI {
     }
 
     public void dispose() {
+        buildMenu.dispose();
         stage.dispose();
     }
 }
