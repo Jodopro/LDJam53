@@ -12,7 +12,13 @@ public class TextureStore {
     public final static Texture backgroundTile = new Texture("background_tile3.png");
 
     public static final Animation<Texture> CONVEYOR_BELT_STRAIGHT =
-            loadMultiFileAnimation("textures/belty_boi%d.png", 8, 0.1f);
+            loadMultiFileAnimation("textures/belt/belty_boi%d.png", 8, 0.1f);
+
+    public static final Animation<Texture> CONVEYOR_BELT_LEFT =
+            loadMultiFileAnimation("textures/bendy_left/bendy_left_belty_boi%d.png", 8, 0.1f);
+
+    public static final Animation<Texture> CONVEYOR_BELT_RIGHT =
+            loadMultiFileAnimation("textures/bendy_right/bendy_right_belty_boi%d.png", 8, 0.1f);
 
 
     /**

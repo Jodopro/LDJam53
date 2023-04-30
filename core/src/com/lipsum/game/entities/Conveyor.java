@@ -1,5 +1,6 @@
 package com.lipsum.game.entities;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.lipsum.game.TextureStore;
@@ -22,6 +23,7 @@ import static com.lipsum.game.util.DrawUtil.drawRotated;
 
 public class Conveyor extends Building {
     public static AbstractFactory factory = ConveyorFactory.getInstance();
+    private Direction direction = Direction.EAST;
 
     private class Waiting {
         Direction direction;
@@ -45,25 +47,35 @@ public class Conveyor extends Building {
     private BuildingType buildingType;
 
     public Conveyor(int x, int y, Direction direction) {
-        super(x, y);
-        // setColor(0,1,0,1);
-        inputs = new ArrayList<>();
-        outputs = new ArrayList<>();
-        outputs.add(direction);
-        switch (direction) {
-            case EAST -> inputs.add(Direction.WEST);
-            case WEST -> inputs.add(Direction.EAST);
-            case SOUTH -> inputs.add(Direction.NORTH);
-            case NORTH -> inputs.add(Direction.SOUTH);
-        }
-        buildingType = BuildingType.BELT_STRAIGHT;
+        this(x, y, BuildingType.BELT_STRAIGHT, direction);
     }
 
-    public Conveyor(int x, int y, List<Direction> inputs, List<Direction> outputs) {
+    public Conveyor(int x, int y, BuildingType type, Direction direction) {
         super(x, y);
-        setColor(0, 1, 0, 1);
+
+        buildingType = type;
+        this.direction = direction;
+        switch (type) {
+            case BELT_STRAIGHT -> init(x ,y, List.of(direction.opposite()), List.of(direction));
+            case BELT_LEFT -> init(x, y, List.of(direction.rotateLeft()), List.of(direction));
+            case BELT_RIGHT -> init(x, y, List.of(direction.rotateRight()), List.of(direction));
+            case MERGER -> init(x, y, List.of(direction.rotateLeft(), direction.opposite(), direction.rotateRight()),
+                    List.of(direction));
+            case SPLITTER -> init(x, y, List.of(direction.opposite()),
+                    List.of(direction, direction.rotateLeft(), direction.rotateRight()));
+            default -> throw new IllegalArgumentException("Unknown building type " + buildingType);
+        }
+    }
+
+    private void init(int x, int y, List<Direction> inputs, List<Direction> outputs) {
         this.inputs = inputs;
         this.outputs = outputs;
+    }
+
+    @Deprecated
+    public Conveyor(int x, int y, List<Direction> inputs, List<Direction> outputs) {
+        super(x, y);
+        init(x, y, inputs, outputs);
     }
 
     private ShapeRenderer renderer = new ShapeRenderer();
@@ -150,7 +162,17 @@ public class Conveyor extends Building {
     }
 
     public void draw(Batch batch, float parentAlpha) {
-        if (buildingType != BuildingType.BELT_STRAIGHT) {
+        Texture texture = null;
+        if (buildingType != null) {
+            texture = switch (buildingType) {
+                case BELT_STRAIGHT -> TextureStore.CONVEYOR_BELT_STRAIGHT.getKeyFrame(stateTime, true);
+                case BELT_RIGHT -> TextureStore.CONVEYOR_BELT_RIGHT.getKeyFrame(stateTime, true);
+                case BELT_LEFT -> TextureStore.CONVEYOR_BELT_LEFT.getKeyFrame(stateTime, true);
+                default -> null;
+            };
+        }
+
+        if (texture == null) {
             batch.end();
 
             renderer.setProjectionMatrix(batch.getProjectionMatrix());
@@ -164,8 +186,8 @@ public class Conveyor extends Building {
 
             batch.begin();
         } else {
-            drawRotated(batch, TextureStore.CONVEYOR_BELT_STRAIGHT.getKeyFrame(stateTime, true), getX(), getY(),
-                    (float) (outputs.get(0).rotateRight().toRadians() * (180.0f / Math.PI)), getWidth(), getHeight());
+            drawRotated(batch, texture, getX(), getY(),
+                    (float) (direction.rotateRight().toRadians() * (180.0f / Math.PI)), getWidth(), getHeight());
         }
     }
 

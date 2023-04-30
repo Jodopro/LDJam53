@@ -20,6 +20,7 @@ import com.lipsum.game.entities.Packet;
 import com.lipsum.game.factory.factories.BuildingFactory;
 import com.lipsum.game.factory.factories.ConveyorFactory;
 import com.lipsum.game.factory.factories.EntityFactory;
+import com.lipsum.game.managers.building.catalog.BuildingType;
 import com.lipsum.game.ui.hud.HudUI;
 import com.lipsum.game.factory.factories.PacketFactory;
 import com.lipsum.game.util.Direction;
@@ -62,13 +63,15 @@ public class LDJam53 extends ApplicationAdapter {
 
 		Conveyor c1 = new Conveyor(2, 1, Direction.NORTH);
 		new Conveyor(2, 2, Direction.NORTH);
-		new Conveyor(2, 3, List.of(Direction.SOUTH), List.of(Direction.WEST, Direction.EAST));
+		new Conveyor(2, 3, BuildingType.SPLITTER, Direction.NORTH);
 		new Conveyor(1, 3, Direction.WEST);
 		new Conveyor(3, 3, Direction.EAST);
-		new Conveyor(4, 3, List.of(Direction.WEST), List.of(Direction.NORTH));
-		new Conveyor(0, 3, List.of(Direction.EAST), List.of(Direction.NORTH));
+		new Conveyor(4, 3, BuildingType.BELT_LEFT, Direction.NORTH);
+		new Conveyor(0, 3, BuildingType.BELT_RIGHT, Direction.NORTH);
 		new Conveyor(4, 4, Direction.NORTH);
 		new Conveyor(0, 4, Direction.NORTH);
+		new Conveyor(2, 4, Direction.NORTH);
+		new Conveyor(2, 5, Direction.NORTH);
 		new Producer(2, 0, Direction.NORTH);
 
 		Packet p = new Packet();
