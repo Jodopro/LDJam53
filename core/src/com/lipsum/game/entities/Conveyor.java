@@ -158,6 +158,7 @@ public class Conveyor extends Building {
                     currentTo = validOutputs.get(rand.nextInt(validOutputs.size()));
                     moveConveyor = new MoveConveyor(this, 2, 1);
                 } else {
+                    currentTo = null;
                     moveConveyor = new MoveConveyor(this, 2, 0.5f);
                 }
                 this.addAction(moveConveyor);
