@@ -22,8 +22,7 @@ public class CreatePacket extends Action {
         }
         producer.setPacketLocation(progress);
         if (progress == 1){
-            producer.passToNext();
-            return true;
+            return producer.passToNext();
         }
         return false;
     }

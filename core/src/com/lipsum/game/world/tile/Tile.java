@@ -60,6 +60,7 @@ public class Tile {
     }
 
     public void setType(int type){
+        this.type = type;
         if (type == TileType.BACKGROUND_TILE){
             if (x == 0 || y == 0 || x == chunk.width - 1 || y == chunk.width - 1) {
                 this.texture = TextureStore.edgeTile;
