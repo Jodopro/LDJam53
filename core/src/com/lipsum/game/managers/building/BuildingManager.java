@@ -6,6 +6,7 @@ import com.lipsum.game.event.EventConsumer;
 import com.lipsum.game.event.EventQueue;
 import com.lipsum.game.event.EventType;
 import com.lipsum.game.event.events.*;
+import com.lipsum.game.factory.factories.EntityFactory;
 import com.lipsum.game.managers.building.catalog.BuildingCatalog;
 import com.lipsum.game.managers.building.catalog.BuildingMode;
 import com.lipsum.game.managers.building.catalog.BuildingType;
@@ -63,12 +64,11 @@ public class BuildingManager {
         int gridY = Math.floorDiv((int) tileClickedEvent.getWorldCoordinate().y(), Tile.HEIGHT);
         System.out.println(buildingMode);
         if (buildingMode == BuildingMode.BUILDING){
-            try {
-                // TODO: Check if empty (instead of this try-catch) and check cost/currency
-
-                BuildingCatalog.produce(new Coordinate(gridX, gridY), direction, selectedType);
-            } catch (IllegalStateException e) {
+            Tile t = World.getInstance().tileAt(new Coordinate(gridX, gridY));
+            if (t.getBuilding() != null){
                 System.out.println("Tile already occupied :(");
+            } else {
+                BuildingCatalog.produce(new Coordinate(gridX, gridY), direction, selectedType);
             }
         } else if (buildingMode == BuildingMode.ROTATE) {
             Tile t = World.getInstance().tileAt(new Coordinate(gridX, gridY));
@@ -77,6 +77,13 @@ public class BuildingManager {
                 EventQueue.getInstance().invoke(new BuildingUpdateEvent(gridX, gridY));
             }
         } else if (buildingMode == BuildingMode.DELETE) {
+            Tile t = World.getInstance().tileAt(new Coordinate(gridX, gridY));
+            if (t.getBuilding() != null){
+                EntityFactory.getInstance().removeManagedObject(t.getBuilding());
+                t.setBuilding(null);
+                t.setType(TileType.BACKGROUND_TILE);
+                EventQueue.getInstance().invoke(new BuildingUpdateEvent(gridX, gridY));
+            }
 
         } else if (buildingMode == BuildingMode.COLOUR && packetType != null) {
             Tile t = World.getInstance().tileAt(new Coordinate(gridX, gridY));
@@ -117,10 +124,10 @@ public class BuildingManager {
 
         World world = World.getInstance();
         Tile tile = world.tileAt(new Coordinate(event.gridX(), event.gridY()));
-        if (tile.getBuilding() instanceof Conveyor){
-            //TODO: seems to do weird stuff sometimes
-            tile.getBuilding().onUpdateNeighbour(((Conveyor) tile.getBuilding()).getCurrentTo());
-        }
+//        if (tile.getBuilding() instanceof Conveyor){
+//            //TODO: seems to do weird stuff sometimes
+//            ((Conveyor) tile.getBuilding()).onUpdateSelf();
+//        }
 
         tile = world.tileAt(new Coordinate(event.gridX()+1, event.gridY()));
         if (tile.getType() == TileType.BUILDING_TILE){

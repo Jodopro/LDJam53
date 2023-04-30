@@ -6,6 +6,7 @@ import com.lipsum.game.TextureStore;
 import com.lipsum.game.actions.MoveConveyor;
 import com.lipsum.game.factory.AbstractFactory;
 import com.lipsum.game.factory.factories.ConveyorFactory;
+import com.lipsum.game.factory.factories.EntityFactory;
 import com.lipsum.game.managers.building.catalog.BuildingType;
 import com.lipsum.game.util.BeltColour;
 import com.lipsum.game.util.Direction;
@@ -168,6 +169,7 @@ public class Conveyor extends Building {
                     currentTo = validOutputs.get(rand.nextInt(validOutputs.size()));
                     moveConveyor = new MoveConveyor(this, 2, 1);
                 } else {
+                    currentTo = null;
                     moveConveyor = new MoveConveyor(this, 2, 0.5f);
                 }
                 this.addAction(moveConveyor);
@@ -182,7 +184,6 @@ public class Conveyor extends Building {
     public void onUpdateNeighbour(Direction direction){
         if (packet != null && (currentTo == direction || currentTo == null)){
             List<Direction> validOutputs = getValidOutputDirections(packet.getType());
-            System.out.println(validOutputs.contains(currentTo));
             if (!validOutputs.contains(currentTo)){
                 currentAction.capProgress(0.5f);
                 if (validOutputs.size() >= 1){
@@ -195,6 +196,21 @@ public class Conveyor extends Building {
             }
         }
     }
+
+    public void onUpdateSelf(){
+        if (packet != null) {
+            List<Direction> validOutputs = getValidOutputDirections(packet.getType());
+            currentAction.capProgress(0.5f);
+            if (validOutputs.size() >= 1){
+                currentTo = validOutputs.get(rand.nextInt(validOutputs.size()));
+                currentAction.setMaxProgress(1);
+            } else {
+                currentTo = null;
+                currentAction.setMaxProgress(0.5f);
+            }
+        }
+    }
+
 
     protected List<Direction> getValidOutputDirections(PacketType type){
         List<Direction> list = new ArrayList<>();
@@ -256,6 +272,7 @@ public class Conveyor extends Building {
 
     @Override
     public void rotate(){
+        System.out.println(direction +" "+gridX+" "+gridY);
         direction = direction.rotateRight();
         List<Direction> newInputs = new ArrayList<>();
         inputs.forEach(x -> newInputs.add(x.rotateRight()));
@@ -267,5 +284,14 @@ public class Conveyor extends Building {
 
     public Direction getCurrentTo() {
         return currentTo;
+    }
+
+    public void onDispose(){
+        System.out.println("dispose Conveyor");
+        if (packet != null){
+            EntityFactory.getInstance().removeManagedObject(packet);
+//            packet = null;
+        }
+        remove();
     }
 }
