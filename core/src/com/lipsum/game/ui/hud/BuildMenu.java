@@ -1,13 +1,17 @@
 package com.lipsum.game.ui.hud;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.lipsum.game.managers.building.catalog.BuildingCatalog;
+import com.lipsum.game.managers.building.catalog.BuildingMode;
 import com.lipsum.game.managers.building.catalog.BuildingType;
 
 /**
@@ -17,7 +21,7 @@ public class BuildMenu extends Table {
     public static final Color BACKGROUND_COLOUR = new Color(0.2f, 0.2f, 0.2f, 1.0f);
 
     public BuildMenu() {
-        ButtonGroup<BuildButton> buttonGroup = new ButtonGroup<>();
+        ButtonGroup<Button> buttonGroup = new ButtonGroup<>();
         Texture defaultTexture = new Texture(Gdx.files.internal("textures/temp-building-sprite.png"));
 
         buttonGroup.add(new BuildButton(defaultTexture, BuildingType.BELT_STRAIGHT));
@@ -25,6 +29,9 @@ public class BuildMenu extends Table {
         buttonGroup.add(new BuildButton(defaultTexture, BuildingType.BELT_RIGHT));
         buttonGroup.add(new BuildButton(defaultTexture, BuildingType.SPLITTER));
         buttonGroup.add(new BuildButton(defaultTexture, BuildingType.MERGER));
+        buttonGroup.add(new ModeButton(defaultTexture, BuildingMode.ROTATE));
+        buttonGroup.add(new ModeButton(defaultTexture, BuildingMode.DELETE));
+
 
         Label.LabelStyle style = new Label.LabelStyle(getFont(), Color.WHITE);
         add(new Label("Build menu:", style)).expandX();

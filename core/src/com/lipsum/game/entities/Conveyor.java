@@ -167,16 +167,18 @@ public class Conveyor extends Building {
         }
     }
 
-    //TODO: should be handled when a tile is updated
-    protected void onUpdateNeighbour(Direction direction){
-        if (packet != null && currentTo == direction){
+    @Override
+    public void onUpdateNeighbour(Direction direction){
+        if (packet != null && (currentTo == direction || currentTo == null)){
             List<Direction> validOutputs = getValidOutputDirections(packet.getType());
+            System.out.println(validOutputs.contains(currentTo));
             if (!validOutputs.contains(currentTo)){
                 currentAction.capProgress(0.5f);
                 if (validOutputs.size() >= 1){
                     currentTo = validOutputs.get(rand.nextInt(validOutputs.size()));
                     currentAction.setMaxProgress(1);
                 } else {
+                    currentTo = null;
                     currentAction.setMaxProgress(0.5f);
                 }
             }
@@ -260,5 +262,20 @@ public class Conveyor extends Building {
             drawRotated(batch, texture, getX(), getY(),
                     (float) (direction.rotateRight().toRadians() * (180.0f / Math.PI)), getWidth(), getHeight());
         }
+    }
+
+    @Override
+    public void rotate(){
+        direction = direction.rotateRight();
+        List<Direction> newInputs = new ArrayList<>();
+        inputs.forEach(x -> newInputs.add(x.rotateRight()));
+        List<Direction> newOutputs = new ArrayList<>();
+        outputs.forEach(x -> newOutputs.add(x.rotateRight()));
+        inputs = newInputs;
+        outputs = newOutputs;
+    }
+
+    public Direction getCurrentTo() {
+        return currentTo;
     }
 }
