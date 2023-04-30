@@ -20,6 +20,12 @@ public class TextureStore {
     public static final Animation<Texture> CONVEYOR_BELT_RIGHT =
             loadMultiFileAnimation("textures/bendy_right/bendy_right_belty_boi%d.png", 8, 0.1f);
 
+    public static final Animation<Texture> SPLITTER =
+            loadMultiFileAnimation("textures/split/splitty_boi%d.png", 8, 0.1f);
+
+    public static final Animation<Texture> MERGER =
+            loadMultiFileAnimation("textures/merge/mergy_boi%d.png", 8, 0.1f);
+
 
     /**
      * Loads multiple texture files into one animation
