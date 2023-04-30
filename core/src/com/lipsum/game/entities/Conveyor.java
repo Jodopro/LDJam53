@@ -27,9 +27,9 @@ public class Conveyor extends Building {
     public static AbstractFactory factory = ConveyorFactory.getInstance();
     private Direction direction = Direction.EAST;
 
-    private class Waiting {
     protected List<PacketType> types;
-    private class Waiting{
+
+    private class Waiting {
         Direction direction;
         Packet packet;
         Conveyor previousConveyor;
@@ -50,72 +50,35 @@ public class Conveyor extends Building {
 
     private BuildingType buildingType;
 
-    public Conveyor(int x, int y, Direction direction) {
-        this(x, y, BuildingType.BELT_STRAIGHT, direction);
+    public Conveyor(int x, int y, BuildingType buildingType, Direction direction) {
+        this(x, y, buildingType, direction, List.of(PacketType.values()));
     }
 
-    public Conveyor(int x, int y, BuildingType type, Direction direction) {
-        super(x, y);
+    public Conveyor(int x, int y, BuildingType buildingType, Direction direction, PacketType packetType) {
+        this(x, y, buildingType, direction, List.of(packetType));
+    }
 
-        buildingType = type;
+    public Conveyor(int x, int y, BuildingType buildingType, Direction direction, List<PacketType> packetType) {
+        super(x, y);
+        this.types = packetType;
+        this.buildingType = buildingType;
         this.direction = direction;
-        switch (type) {
-            case BELT_STRAIGHT -> init(x ,y, List.of(direction.opposite()), List.of(direction));
-            case BELT_LEFT -> init(x, y, List.of(direction.rotateLeft()), List.of(direction));
-            case BELT_RIGHT -> init(x, y, List.of(direction.rotateRight()), List.of(direction));
-            case MERGER -> init(x, y, List.of(direction.rotateLeft(), direction.opposite(), direction.rotateRight()),
+        switch (buildingType) {
+            case BELT_STRAIGHT, CONSUMER, PRODUCER -> initIO(List.of(direction.opposite()), List.of(direction));
+            case BELT_LEFT -> initIO(List.of(direction.rotateLeft()), List.of(direction));
+            case BELT_RIGHT -> initIO(List.of(direction.rotateRight()), List.of(direction));
+            case MERGER -> initIO(List.of(direction.rotateLeft(), direction.opposite(), direction.rotateRight()),
                     List.of(direction));
-            case SPLITTER -> init(x, y, List.of(direction.opposite()),
+            case SPLITTER -> initIO(List.of(direction.opposite()),
                     List.of(direction, direction.rotateLeft(), direction.rotateRight()));
             default -> throw new IllegalArgumentException("Unknown building type " + buildingType);
-    public Conveyor(int x, int y, Direction direction){
-        this(x, y, new ArrayList<>(), new ArrayList<>());
-        outputs.add(direction);
-        switch (direction) {
-            case EAST -> inputs.add(Direction.WEST);
-            case WEST -> inputs.add(Direction.EAST);
-            case SOUTH -> inputs.add(Direction.NORTH);
-            case NORTH -> inputs.add(Direction.SOUTH);
+
         }
     }
 
-    public Conveyor(int x, int y, Direction direction, PacketType type){
-        this(x, y, new ArrayList<>(), new ArrayList<>(), type);
-        outputs.add(direction);
-        switch (direction) {
-            case EAST -> inputs.add(Direction.WEST);
-            case WEST -> inputs.add(Direction.EAST);
-            case SOUTH -> inputs.add(Direction.NORTH);
-            case NORTH -> inputs.add(Direction.SOUTH);
-        }
-    }
-
-    private void init(int x, int y, List<Direction> inputs, List<Direction> outputs) {
+    private void initIO(List<Direction> inputs, List<Direction> outputs) {
         this.inputs = inputs;
         this.outputs = outputs;
-    }
-
-    @Deprecated
-    public Conveyor(int x, int y, List<Direction> inputs, List<Direction> outputs) {
-    public Conveyor(int x, int y, List<Direction> inputs, List<Direction> outputs, List<PacketType> types){
-        super(x, y);
-        init(x, y, inputs, outputs);
-        this.types = types;
-        setColor(0,1,0,1);
-        this.inputs = inputs;
-        this.outputs = outputs;
-    }
-
-    public Conveyor(int x, int y, List<Direction> inputs, List<Direction> outputs){
-        this(x, y, inputs, outputs, new ArrayList<>());
-        types.add(PacketType.RED);
-        types.add(PacketType.YELLOW);
-        types.add(PacketType.BLUE);
-    }
-
-    public Conveyor(int x, int y, List<Direction> inputs, List<Direction> outputs, PacketType type){
-        this(x, y, inputs, outputs, new ArrayList<>());
-        types.add(type);
     }
 
     public void setPacketLocation(float progress) {
@@ -143,7 +106,7 @@ public class Conveyor extends Building {
         }
     }
 
-    public boolean passToNext(){
+    public boolean passToNext() {
         Building b = null;
         Direction d = null;
         if (currentTo == Direction.NORTH && northBuilding != null) {
@@ -193,10 +156,10 @@ public class Conveyor extends Building {
     }
 
 
-    public List<Building> allowsInputFrom(){
+    public List<Building> allowsInputFrom() {
         List<Building> l = new ArrayList<>();
-        for (Direction d:inputs){
-            switch (d){
+        for (Direction d : inputs) {
+            switch (d) {
                 case EAST -> l.add(eastBuilding);
                 case WEST -> l.add(westBuilding);
                 case NORTH -> l.add(northBuilding);
@@ -220,33 +183,34 @@ public class Conveyor extends Building {
             };
         }
 
+        batch.end();
+
+        renderer.setProjectionMatrix(batch.getProjectionMatrix());
+        renderer.setTransformMatrix(batch.getTransformMatrix());
+        renderer.translate(getX(), getY(), 0);
+
+        renderer.begin(ShapeRenderer.ShapeType.Filled);
         if (texture == null) {
-            batch.end();
-
-            renderer.setProjectionMatrix(batch.getProjectionMatrix());
-            renderer.setTransformMatrix(batch.getTransformMatrix());
-            renderer.translate(getX(), getY(), 0);
-
-            renderer.begin(ShapeRenderer.ShapeType.Filled);
             renderer.setColor(getColor());
             renderer.rect(0, 0, getWidth(), getHeight());
-            int i = 0;
-        for (PacketType type:types){
-            switch(type){
-                case RED -> renderer.setColor(1,0,0,1);
-                case BLUE -> renderer.setColor(0,0,1,1);
-                case YELLOW -> renderer.setColor(1,1,0,1);
+        }
+        int i = 0;
+        for (PacketType type : types) {
+            switch (type) {
+                case RED -> renderer.setColor(1, 0, 0, 1);
+                case BLUE -> renderer.setColor(0, 0, 1, 1);
+                case YELLOW -> renderer.setColor(1, 1, 0, 1);
             }
-            renderer.rect(i*getWidth()/types.size(), 0, getWidth()/types.size(), 5);
-            renderer.rect(getWidth()-5, i*getHeight()/types.size(), 5, getHeight()/types.size());
-            renderer.rect(getWidth() - (1+i)*getWidth()/types.size(), getHeight()-5, getWidth()/types.size(), 5);
-            renderer.rect(0, getHeight() - (1+i)*getHeight()/types.size(), 5, getHeight()/types.size());
+            renderer.rect(i * getWidth() / types.size(), 0, getWidth() / types.size(), 5);
+            renderer.rect(getWidth() - 5, i * getHeight() / types.size(), 5, getHeight() / types.size());
+            renderer.rect(getWidth() - (1 + i) * getWidth() / types.size(), getHeight() - 5, getWidth() / types.size(), 5);
+            renderer.rect(0, getHeight() - (1 + i) * getHeight() / types.size(), 5, getHeight() / types.size());
             i += 1;
         }
         renderer.end();
 
-            batch.begin();
-        } else {
+        batch.begin();
+        if (texture != null) {
             drawRotated(batch, texture, getX(), getY(),
                     (float) (direction.rotateRight().toRadians() * (180.0f / Math.PI)), getWidth(), getHeight());
         }
