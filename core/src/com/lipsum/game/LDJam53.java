@@ -20,6 +20,7 @@ import com.lipsum.game.entities.Packet;
 import com.lipsum.game.factory.factories.BuildingFactory;
 import com.lipsum.game.factory.factories.ConveyorFactory;
 import com.lipsum.game.factory.factories.EntityFactory;
+import com.lipsum.game.states.PlayerState;
 import com.lipsum.game.ui.hud.HudUI;
 import com.lipsum.game.factory.factories.PacketFactory;
 import com.lipsum.game.util.Direction;
@@ -31,7 +32,8 @@ import java.util.Random;
 public class LDJam53 extends ApplicationAdapter {
 	World world;
 	InputMultiplexer inputMultiplexer;
-	HudUI hudUI = new HudUI();
+	PlayerState playerState;
+	HudUI hudUI;
 
 	Stage stage;
 	public static Group packetGroup = new Group();
@@ -49,6 +51,7 @@ public class LDJam53 extends ApplicationAdapter {
 	public void create () {
 		var camera = new OrthographicCamera(30f, 30f);
 		inputMultiplexer = new InputMultiplexer();
+		hudUI = new HudUI();
 
 		hudUI.create(inputMultiplexer);
 
