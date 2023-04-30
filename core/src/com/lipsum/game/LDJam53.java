@@ -58,7 +58,7 @@ public class LDJam53 extends ApplicationAdapter {
 		hudUI.create(inputMultiplexer);
 
 		stage = new Stage(new ScreenViewport(camera));
-		world = World.init(10, camera);
+		world = World.init(10, stage);
 		stage.addActor(world);
 		stage.addActor(machineGroup);
 		stage.addActor(packetGroup);
@@ -73,8 +73,8 @@ public class LDJam53 extends ApplicationAdapter {
 		new Conveyor(5, 5, Direction.NORTH);
 		new Conveyor(1, 5, Direction.NORTH);
 		new Producer(3, 1, Direction.NORTH);
-		new Consumer(1,6,Direction.NORTH);
-		new Consumer(5,6,Direction.NORTH);
+		new Consumer(1,6, Direction.NORTH);
+		new Consumer(5,6, Direction.NORTH);
 
 		inputMultiplexer.addProcessor(stage);
 

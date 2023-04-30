@@ -2,6 +2,7 @@ package com.lipsum.game.entities;
 
 import com.lipsum.game.actions.CreatePacket;
 import com.lipsum.game.factory.factories.EntityFactory;
+import com.lipsum.game.util.Direction;
 
 import java.util.ArrayList;
 

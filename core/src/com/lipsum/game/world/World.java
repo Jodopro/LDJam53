@@ -21,8 +21,8 @@ public class World extends Actor {
     public static World getInstance() {
         return instance;
     }
-    public static World init(int chunkSideLengthInTiles, OrthographicCamera camera){
-        instance = new World(chunkSideLengthInTiles, camera);
+    public static World init(int chunkSideLengthInTiles, Stage stage){
+        instance = new World(chunkSideLengthInTiles, stage);
         return instance;
     }
     public final int CHUNK_DIMENSION_IN_TILES;
@@ -128,6 +128,10 @@ public class World extends Actor {
         Coordinate chunk = chunkCoordinateOf(tileCoordinate);
         Coordinate local = localCoordinateOf(tileCoordinate);
         return chunks.get(chunk).tiles[local.y()][local.x()];
+    }
+
+    public Tile tileAt(float absoluteX, float absoluteY){
+        return tileAt(gridCoordinateOf(absoluteX, absoluteY));
     }
 
     public Coordinate chunkCoordinateOf(Coordinate tileCoordinate){
