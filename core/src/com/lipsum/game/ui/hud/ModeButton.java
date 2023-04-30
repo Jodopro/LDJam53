@@ -21,7 +21,6 @@ public class ModeButton extends Button {
         ));
 
         this.type = type;
-        this.texture = texture;
         listener = new ButtonClickedListener();
         addListener(listener);
     }
