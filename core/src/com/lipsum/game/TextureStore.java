@@ -29,6 +29,9 @@ public class TextureStore {
     public static final Texture PACKET = new Texture(Gdx.files.internal("textures/packet.png"));
 
     public static final Texture BUILD_BUTTON = new Texture(Gdx.files.internal("textures/build_button.png"));
+    public static final Texture ROTATE = new Texture(Gdx.files.internal("textures/build_button.png"));
+    public static final Texture DELETE = new Texture(Gdx.files.internal("textures/build_button.png"));
+
 
 
 
