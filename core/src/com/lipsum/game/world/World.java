@@ -171,6 +171,9 @@ public class World extends Actor {
         if (Gdx.input.isKeyPressed(Input.Keys.Q)) {
             camera.zoom -= 0.05;
         }
+        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+            System.out.println("Button for debug");
+        }
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             camera.translate(-9, 0, 0);
         }

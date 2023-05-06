@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import static com.lipsum.game.LDJam53.stateTime;
 import static com.lipsum.game.util.DrawUtil.drawRotated;
@@ -27,7 +29,9 @@ import static com.lipsum.game.util.DrawUtil.drawRotated;
 public class Conveyor extends Building {
     private static final Random rand = new Random();
     public static AbstractFactory factory = ConveyorFactory.getInstance();
-    private Direction direction = Direction.EAST;
+    protected Direction direction = Direction.EAST;
+    private Lock destructionLock = new ReentrantLock();
+    private boolean isDestruction = false;
 
     protected List<PacketType> types;
     protected MoveConveyor currentAction;
@@ -158,26 +162,30 @@ public class Conveyor extends Building {
     }
 
     protected void getNextPacket() {
-        if (packet == null) {
-            Waiting next = waitingQueue.poll();
-            if (next != null) {
-                packet = next.packet;
-                currentFrom = next.direction;
-                List<Direction> validOutputs = getValidOutputDirections(packet.getType());
-                MoveConveyor moveConveyor;
-                if (validOutputs.size() >= 1){
-                    currentTo = validOutputs.get(rand.nextInt(validOutputs.size()));
-                    moveConveyor = new MoveConveyor(this, 2, 1);
-                } else {
-                    currentTo = null;
-                    moveConveyor = new MoveConveyor(this, 2, 0.5f);
+        destructionLock.lock();
+        if (!isDestruction) {
+            if (packet == null) {
+                Waiting next = waitingQueue.poll();
+                if (next != null) {
+                    packet = next.packet;
+                    currentFrom = next.direction;
+                    List<Direction> validOutputs = getValidOutputDirections(packet.getType());
+                    MoveConveyor moveConveyor;
+                    if (validOutputs.size() >= 1) {
+                        currentTo = validOutputs.get(rand.nextInt(validOutputs.size()));
+                        moveConveyor = new MoveConveyor(this, 2, 1);
+                    } else {
+                        currentTo = null;
+                        moveConveyor = new MoveConveyor(this, 2, 0.5f);
+                    }
+                    this.addAction(moveConveyor);
+                    currentAction = moveConveyor;
+                    next.previousConveyor.packet = null;
+                    next.previousConveyor.getNextPacket();
                 }
-                this.addAction(moveConveyor);
-                currentAction = moveConveyor;
-                next.previousConveyor.packet = null;
-                next.previousConveyor.getNextPacket();
             }
         }
+        destructionLock.unlock();
     }
 
     @Override
@@ -193,6 +201,9 @@ public class Conveyor extends Building {
                     currentTo = null;
                     currentAction.setMaxProgress(0.5f);
                 }
+            }
+            if (currentAction != null && !this.getActions().contains(currentAction, true)){
+                this.addAction(currentAction);
             }
         }
     }
@@ -287,11 +298,12 @@ public class Conveyor extends Building {
     }
 
     public void onDispose(){
-        System.out.println("dispose Conveyor");
+        destructionLock.lock();
+        isDestruction = true;
         if (packet != null){
             EntityFactory.getInstance().removeManagedObject(packet);
-//            packet = null;
         }
         remove();
+        destructionLock.unlock();
     }
 }
