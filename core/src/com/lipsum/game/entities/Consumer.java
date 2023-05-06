@@ -2,6 +2,7 @@ package com.lipsum.game.entities;
 
 import com.lipsum.game.factory.factories.EntityFactory;
 import com.lipsum.game.managers.building.catalog.BuildingType;
+import com.lipsum.game.states.PlayerState;
 import com.lipsum.game.util.Direction;
 import com.lipsum.game.util.PacketType;
 
@@ -23,6 +24,8 @@ public class Consumer extends Conveyor {
         EntityFactory.getInstance().removeManagedObject(packet);
         packet = null;
         getNextPacket();
+        PlayerState.getInstance().addScore(1);
+        PlayerState.getInstance().addMoney(1);
         return true;
     }
 
