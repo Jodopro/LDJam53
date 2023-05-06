@@ -57,7 +57,7 @@ public class SubtitledImageDrawable implements Drawable {
     }
 
     private Texture getBuildingTexture() {
-        final float time = 0.5f;
+        final float time = 0.1f;
         return switch (type) {
             case BELT_STRAIGHT -> TextureStore.CONVEYOR_BELT_STRAIGHT.getKeyFrame(time, true);
             case BELT_RIGHT -> TextureStore.CONVEYOR_BELT_RIGHT.getKeyFrame(time, true);

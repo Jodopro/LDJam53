@@ -56,7 +56,6 @@ public class Building extends Entity{
     }
     @Override
     public void onDispose() {
-        System.out.println("dispose Building");
         remove();
     }
 
