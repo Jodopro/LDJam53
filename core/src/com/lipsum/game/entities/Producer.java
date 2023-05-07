@@ -1,6 +1,7 @@
 package com.lipsum.game.entities;
 
 import com.lipsum.game.actions.CreatePacket;
+import com.lipsum.game.actions.WaitingHealtDecrease;
 import com.lipsum.game.managers.building.catalog.BuildingType;
 import com.lipsum.game.util.Direction;
 import com.lipsum.game.util.PacketType;
@@ -11,6 +12,7 @@ import java.util.Random;
 
 public class Producer extends Conveyor {
     private static final Random rand = new Random();
+    private boolean waiting = false;
     public Producer(int x, int y, Direction direction, PacketType type){
         super(x, y, BuildingType.PRODUCER, direction, type);
         setColor(0,1,1,1);
@@ -18,6 +20,7 @@ public class Producer extends Conveyor {
         currentTo = direction;
         currentFrom = direction.opposite();
         getNextPacket();
+        this.addAction(new WaitingHealtDecrease(this, 1));
     }
 
     public void setPacketLocation(float progress){
@@ -28,6 +31,7 @@ public class Producer extends Conveyor {
     @Override
     protected void getNextPacket() {
         if (packet == null) {
+            setWaiting(false);
             packet = new Packet(types.get(rand.nextInt(types.size())));
             currentTo = direction;
             CreatePacket createPacket = new CreatePacket(this, 0.5f);
@@ -36,23 +40,11 @@ public class Producer extends Conveyor {
         }
     }
 
-    @Override
-    public void onUpdateNeighbour(Direction direction){
-        if (packet != null && (currentTo == direction || currentTo == null)){
-            List<Direction> validOutputs = getValidOutputDirections(packet.getType());
-            if (!validOutputs.contains(currentTo)){
-                currentAction.capProgress(0.5f);
-                if (validOutputs.size() >= 1){
-                    currentTo = validOutputs.get(rand.nextInt(validOutputs.size()));
-                    currentAction.setMaxProgress(1);
-                } else {
-                    currentTo = null;
-                    currentAction.setMaxProgress(0.5f);
-                }
-            }
-            if (currentAction != null && !this.getActions().contains(currentAction, true)){
-                this.addAction(currentAction);
-            }
-        }
+    public boolean isWaiting() {
+        return waiting;
+    }
+
+    public void setWaiting(boolean waiting) {
+        this.waiting = waiting;
     }
 }

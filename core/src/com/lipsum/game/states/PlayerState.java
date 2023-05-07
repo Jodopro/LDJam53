@@ -40,5 +40,7 @@ public class PlayerState {
     public void setScore(float value) {this.theState.second.value = value; }
     public void addScore(float earnedPoints) {this.theState.second.value += earnedPoints; }
     public void subtractScore(float penalty) {this.theState.second.value -= penalty; }
-    public void setHealth(float newHealth) throws BrokenBarrierException {throw new BrokenBarrierException("Health kan je niet aanpassen in deze game."); }
+    public void setHealth(float value) {this.theState.third.value = value; }
+    public void addHealth(float healthPotion) {this.theState.third.value += healthPotion; }
+    public void subtractHealth(float damageTaken) {this.theState.third.value -= damageTaken; }
 }

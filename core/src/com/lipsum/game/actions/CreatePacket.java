@@ -16,13 +16,13 @@ public class CreatePacket extends MoveConveyor {
     }
     @Override
     public boolean act(float delta) {
-        //TODO: is same as move conveyor but should probably change at some point so therefore duplicate code
         progress += delta*speed;
         if (progress >= 1){
             progress = 1;
         }
         producer.setPacketLocation(progress);
         if (progress == 1){
+            producer.setWaiting(true);
             return producer.passToNext();
         }
         return false;

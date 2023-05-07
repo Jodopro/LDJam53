@@ -193,8 +193,6 @@ public class Conveyor extends Building {
         if (packet != null && (currentTo == direction || currentTo == null)){
             List<Direction> validOutputs = getValidOutputDirections(packet.getType());
             if (!validOutputs.contains(currentTo)){
-                //TODO: if currentAction.progress == 1
-                //          then remove from queue and try to add it at the end
                 currentAction.capProgress(0.5f);
                 if (validOutputs.size() >= 1){
                     currentTo = validOutputs.get(rand.nextInt(validOutputs.size()));
