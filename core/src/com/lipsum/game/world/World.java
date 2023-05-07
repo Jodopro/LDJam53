@@ -2,11 +2,14 @@ package com.lipsum.game.world;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.lipsum.game.util.TileType;
 import com.lipsum.game.utils.Twople;
@@ -48,6 +51,22 @@ public class World extends Actor {
 
         tileClickListener = new TileClickListener(this);
         stage.addListener(tileClickListener);
+
+        stage.addListener(new InputListener() {
+            @Override
+            public boolean scrolled(InputEvent event, float x, float y, float amountX, float amountY) {
+                if (amountY != 0){
+                    float oldZoom = camera.zoom;
+                    camera.zoom *= Math.pow(1.1f, amountY);
+                    camera.zoom = MathUtils.clamp(camera.zoom, 0.1f, 1000/camera.viewportWidth);
+                    float factor = (1-camera.zoom/oldZoom);
+                    float prefDeltaX = (x-camera.position.x)*factor;
+                    float prefDeltaY = (y-camera.position.y)*factor;
+                    camera.translate(prefDeltaX, prefDeltaY);
+                }
+                return false;
+            }
+        });
     }
 
     private Chunk makeBackgroundChunk(int x, int y) {
@@ -175,16 +194,16 @@ public class World extends Actor {
             System.out.println("Button for debug");
         }
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            camera.translate(-9, 0, 0);
+            camera.translate(-15*camera.zoom, 0, 0);
         }
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            camera.translate(9, 0, 0);
+            camera.translate(15*camera.zoom, 0, 0);
         }
         if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            camera.translate(0, -9, 0);
+            camera.translate(0, -15*camera.zoom, 0);
         }
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            camera.translate(0, 9, 0);
+            camera.translate(0, 15*camera.zoom, 0);
         }
 
         camera.zoom = MathUtils.clamp(camera.zoom, 0.1f, 1000/camera.viewportWidth);
