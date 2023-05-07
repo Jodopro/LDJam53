@@ -10,6 +10,7 @@ import com.lipsum.game.factory.factories.EntityFactory;
 import com.lipsum.game.managers.building.catalog.BuildingCatalog;
 import com.lipsum.game.managers.building.catalog.BuildingMode;
 import com.lipsum.game.managers.building.catalog.BuildingType;
+import com.lipsum.game.states.PlayerState;
 import com.lipsum.game.util.Direction;
 import com.lipsum.game.util.PacketType;
 import com.lipsum.game.util.TileType;
@@ -68,8 +69,13 @@ public class BuildingManager {
             if (t.getBuilding() != null){
                 System.out.println("Tile already occupied :(");
             } else {
-                BuildingCatalog.produce(new Coordinate(gridX, gridY), direction, selectedType);
-                EventQueue.getInstance().invoke(new BuildingUpdateEvent(gridX, gridY));
+                if(PlayerState.getInstance().getMoneyLeft() >= BuildingCatalog.getCost(selectedType)){
+                    PlayerState.getInstance().subtractMoney(BuildingCatalog.getCost(selectedType));
+                    BuildingCatalog.produce(new Coordinate(gridX, gridY), direction, selectedType);
+                    EventQueue.getInstance().invoke(new BuildingUpdateEvent(gridX, gridY));
+                } else {
+                    System.out.println("Not enough money");
+                }
             }
         } else if (buildingMode == BuildingMode.ROTATE) {
             Tile t = World.getInstance().tileAt(new Coordinate(gridX, gridY));

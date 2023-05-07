@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.lipsum.game.actions.CreateBuilding;
 import com.lipsum.game.util.TileType;
 import com.lipsum.game.utils.Twople;
 import com.lipsum.game.world.tile.Tile;
@@ -68,6 +69,9 @@ public class World extends Actor {
                 return false;
             }
         });
+
+        CreateBuilding createBuilding = new CreateBuilding(1);
+        this.addAction(createBuilding);
     }
 
     private Chunk makeBackgroundChunk(int x, int y) {
@@ -81,6 +85,13 @@ public class World extends Actor {
         chunks.put(coord, newChunk);
 //        System.out.printf("made a chankoe @ %d : %d%n", x, y);
         return newChunk;
+    }
+
+    public Chunk getChunk(Coordinate c){
+        if (!chunks.containsKey(c)){
+            return makeBackgroundChunk(c.x(), c.y());
+        }
+        return chunks.get(c);
     }
 
     public void step() {
@@ -105,11 +116,11 @@ public class World extends Actor {
         }
 
 
-        for (var n : localChunkArea) {
-            if (chunks.get(n) == null) {
-                chunks.put(n, makeBackgroundChunk(n.x(), n.y()));
-            }
-        }
+//        for (var n : localChunkArea) {
+//            if (chunks.get(n) == null) {
+//                chunks.put(n, makeBackgroundChunk(n.x(), n.y()));
+//            }
+//        }
     }
 
     @Override
@@ -117,9 +128,7 @@ public class World extends Actor {
         batch.setProjectionMatrix(camera.combined);
 
         for (var n : localChunkArea) {
-            if (chunks.get(n) != null) {
-                chunks.get(n).draw(batch);
-            }
+            getChunk(n).draw(batch);
         }
 
         // batch.draw(cameraTexture, camera.position.x - 16 , camera.position.y - 16, 32, 32);
@@ -128,7 +137,7 @@ public class World extends Actor {
     public Tile tileAt(Coordinate tileCoordinate){
         Coordinate chunk = chunkCoordinateOf(tileCoordinate);
         Coordinate local = localCoordinateOf(tileCoordinate);
-        return chunks.get(chunk).tiles[local.y()][local.x()];
+        return getChunk(chunk).tiles[local.y()][local.x()];
     }
 
     public Tile tileAt(float absoluteX, float absoluteY){
