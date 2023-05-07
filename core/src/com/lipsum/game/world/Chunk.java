@@ -29,7 +29,7 @@ public class Chunk {
                 batch.draw(tile.getTexture(), coordinate.x() * size + colI * Tile.WIDTH, coordinate.y() * size + rowI * Tile.HEIGHT, Tile.WIDTH, Tile.HEIGHT);
             }
         }
-        font.draw(batch, String.format("x: %d y: %d", coordinate.x(), coordinate.y()), coordinate.x() * size, coordinate.y() * size);
+//        font.draw(batch, String.format("x: %d y: %d", coordinate.x(), coordinate.y()), coordinate.x() * size, coordinate.y() * size);
     }
 
     public void dispose() {

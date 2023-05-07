@@ -7,12 +7,16 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.lipsum.game.util.TileType;
 import com.lipsum.game.utils.Twople;
 import com.lipsum.game.world.tile.Tile;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class World extends Actor {
     private static World instance = null;
@@ -32,14 +36,14 @@ public class World extends Actor {
 
     // ingore these variables :)
     private Coordinate currentChunkCoord;
-    private Coordinate[] localChunkArea;
+    private List<Coordinate> localChunkArea = new ArrayList<>();;
 
     public World(int chunkSideLengthInTiles, Stage stage) {
         super();
         setStage(stage);
         this.camera = (OrthographicCamera) stage.getCamera();
         this.camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0);
-        this.camera.zoom = 10f;
+        this.camera.zoom = 2f;
         this.camera.update();
 
         this.CHUNK_DIMENSION_IN_TILES = chunkSideLengthInTiles;
@@ -48,6 +52,22 @@ public class World extends Actor {
 
         tileClickListener = new TileClickListener(this);
         stage.addListener(tileClickListener);
+
+        stage.addListener(new InputListener() {
+            @Override
+            public boolean scrolled(InputEvent event, float x, float y, float amountX, float amountY) {
+                if (amountY != 0){
+                    float oldZoom = camera.zoom;
+                    camera.zoom *= Math.pow(1.1f, amountY);
+                    camera.zoom = MathUtils.clamp(camera.zoom, 0.1f, 10f);
+                    float factor = (1-camera.zoom/oldZoom);
+                    float prefDeltaX = (x-camera.position.x)*factor;
+                    float prefDeltaY = (y-camera.position.y)*factor;
+                    camera.translate(prefDeltaX, prefDeltaY);
+                }
+                return false;
+            }
+        });
     }
 
     private Chunk makeBackgroundChunk(int x, int y) {
@@ -59,7 +79,7 @@ public class World extends Actor {
             }
         }
         chunks.put(coord, newChunk);
-        System.out.printf("made a chankoe @ %d : %d%n", x, y);
+//        System.out.printf("made a chankoe @ %d : %d%n", x, y);
         return newChunk;
     }
 
@@ -67,19 +87,23 @@ public class World extends Actor {
         var chunkSize = Tile.WIDTH * CHUNK_DIMENSION_IN_TILES;
         currentChunkCoord = new Coordinate((int)Math.floor(camera.position.x / chunkSize), (int)Math.floor(camera.position.y / chunkSize));
 
+        int minChunkX = (int)Math.floor((camera.position.x-camera.viewportWidth*camera.zoom/2)/chunkSize);
+        int minChunkY = (int)Math.floor((camera.position.y-camera.viewportHeight*camera.zoom/2)/chunkSize);
+        int maxChunkX = (int)Math.floor((camera.position.x+camera.viewportWidth*camera.zoom/2)/chunkSize);
+        int maxChunkY = (int)Math.floor((camera.position.y+camera.viewportHeight*camera.zoom/2)/chunkSize);
         handleInput();
         camera.update();
-        localChunkArea = new Coordinate[]{
-            new Coordinate(currentChunkCoord.x() + 1, currentChunkCoord.y() + 1),
-            new Coordinate(currentChunkCoord.x(), currentChunkCoord.y() + 1),
-            new Coordinate(currentChunkCoord.x() - 1, currentChunkCoord.y() + 1),
-            new Coordinate(currentChunkCoord.x() - 1, currentChunkCoord.y()),
-            new Coordinate(currentChunkCoord.x(), currentChunkCoord.y()),
-            new Coordinate(currentChunkCoord.x() + 1, currentChunkCoord.y()),
-            new Coordinate(currentChunkCoord.x() -1, currentChunkCoord.y() - 1),
-            new Coordinate(currentChunkCoord.x(), currentChunkCoord.y() - 1),
-            new Coordinate(currentChunkCoord.x() + 1, currentChunkCoord.y() - 1),
-        };
+        localChunkArea.clear();
+        int tmpChunkX = minChunkX;
+        while(tmpChunkX <= maxChunkX){
+            int tmpChunkY = minChunkY;
+            while(tmpChunkY <= maxChunkY){
+                localChunkArea.add(new Coordinate(tmpChunkX, tmpChunkY));
+                tmpChunkY+=1;
+            }
+            tmpChunkX+=1;
+        }
+
 
         for (var n : localChunkArea) {
             if (chunks.get(n) == null) {
@@ -100,27 +124,6 @@ public class World extends Actor {
 
         // batch.draw(cameraTexture, camera.position.x - 16 , camera.position.y - 16, 32, 32);
     }
-
-//    public Chunk chunkAt(float absoluteX, float absoluteY) {
-//        return chunks.get(currentChunkCoord);
-//    }
-//
-//    public Tile tileAt(float absoluteX, float absoluteY) {
-//        var chunkSize = Tile.WIDTH * CHUNK_DIMENSION_IN_TILES;
-//        BiFunction<Float, Float, Float> difference = (a, b) -> {
-//            var absA =  Math.abs(a);
-//            var absB = Math.abs(b);
-//            return absA > absB ? absA - absB : absB - absA;
-//        };
-//
-//        int row = (int)Math.floor(Math.abs(absoluteX - (float)(currentChunkCoord.x() * chunkSize)) / Tile.WIDTH);
-//        int col = (int)Math.floor(Math.abs(absoluteY - (float)(currentChunkCoord.y() * chunkSize)) / Tile.HEIGHT);
-//        return chunks.get(currentChunkCoord).tiles[row][col];
-//    }
-
-//    public Coordinate chunkCoordinateOf(float absoluteX, float absoluteY){
-//        return null;
-//    }
 
     public Tile tileAt(Coordinate tileCoordinate){
         Coordinate chunk = chunkCoordinateOf(tileCoordinate);
@@ -175,18 +178,18 @@ public class World extends Actor {
             System.out.println("Button for debug");
         }
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            camera.translate(-9, 0, 0);
+            camera.translate(-15*camera.zoom, 0, 0);
         }
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            camera.translate(9, 0, 0);
+            camera.translate(15*camera.zoom, 0, 0);
         }
         if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            camera.translate(0, -9, 0);
+            camera.translate(0, -15*camera.zoom, 0);
         }
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            camera.translate(0, 9, 0);
+            camera.translate(0, 15*camera.zoom, 0);
         }
 
-        camera.zoom = MathUtils.clamp(camera.zoom, 0.1f, 1000/camera.viewportWidth);
+        camera.zoom = MathUtils.clamp(camera.zoom, 0.1f, 10f);
     }
 }
