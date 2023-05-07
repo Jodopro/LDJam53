@@ -13,7 +13,7 @@ public class DefaultLabelStyle {
 
     public static Label.LabelStyle getLabelStyle() {
         if (instance == null) {
-            instance = new Label.LabelStyle(getFont(), Color.WHITE);
+            instance = new Label.LabelStyle(getFont(), Color.BLACK);
         }
         return instance;
     }
@@ -23,6 +23,7 @@ public class DefaultLabelStyle {
             FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/FreeMono.otf"));
             FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
             parameter.size = 12;
+            parameter.color = Color.BLACK;
             font = generator.generateFont(parameter); // font size 12 pixels
             generator.dispose(); // don't forget to dispose to avoid memory leaks!
         }

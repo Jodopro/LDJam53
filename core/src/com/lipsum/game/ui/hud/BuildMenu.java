@@ -15,6 +15,7 @@ import com.lipsum.game.event.EventType;
 import com.lipsum.game.event.events.TileDirectionChangedEvent;
 import com.lipsum.game.managers.building.catalog.BuildingMode;
 import com.lipsum.game.managers.building.catalog.BuildingType;
+import com.lipsum.game.ui.styles.DefaultLabelStyle;
 import com.lipsum.game.util.Direction;
 
 /**
@@ -39,7 +40,8 @@ public class BuildMenu extends Table {
         buttonGroup.add(new ModeButton(defaultTexture, BuildingMode.ROTATE));
         buttonGroup.add(new ModeButton(defaultTexture, BuildingMode.DELETE));
 
-        Label.LabelStyle style = new Label.LabelStyle(getFont(), Color.WHITE);
+//        Label.LabelStyle style = new Label.LabelStyle(getFont(), Color.WHITE);
+        Label.LabelStyle style = DefaultLabelStyle.getLabelStyle();
         add(new Label("Build menu:", style)).expandX();
         row();
 

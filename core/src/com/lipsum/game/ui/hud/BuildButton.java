@@ -10,7 +10,7 @@ import com.lipsum.game.event.events.SelectedModeChangedEvent;
 import com.lipsum.game.managers.building.catalog.BuildingMode;
 import com.lipsum.game.managers.building.catalog.BuildingType;
 
-import static com.lipsum.game.ui.hud.BuildMenu.getFont;
+import static com.lipsum.game.ui.styles.DefaultLabelStyle.getFont;
 
 public class BuildButton extends Button {
 
